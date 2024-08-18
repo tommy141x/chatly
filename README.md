@@ -24,6 +24,7 @@ Chatly is an open-source social platform similar to Discord or Guilded, built us
 - 🐰 BunJS
 - 🚀 Tauri
 - ⚛️ React
+- 🤖 Matrix
 - 🎨 Tailwind CSS
 - 🧰 Shadcn/UI
 
