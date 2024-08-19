@@ -1,3 +1,5 @@
+version: "3"
+
 services:
   livekit:
     image: livekit/livekit-server:latest
@@ -7,23 +9,46 @@ services:
       - "7882:7882/udp"
     command: --dev --config /livekit.yaml
     volumes:
-      - ./livekit.yaml:/livekit.yaml # Adjust the path for your config file if needed
+      - ./livekit.yaml:/livekit.yaml
     depends_on:
       - redis
+    networks:
+      - backend
 
   redis:
     image: redis:7-alpine
     command: redis-server --protected-mode no
-    ports:
-      - "6379:6379"
+    networks:
+      - backend
+
+  timescaledb:
+    image: timescale/timescaledb:latest-pg16
+    environment:
+      POSTGRES_PASSWORD: mysecretpassword
+      POSTGRES_USER: postgres
+      POSTGRES_DB: timescaledb
+    volumes:
+      - timescaledb_data:/var/lib/postgresql/data
+    networks:
+      - backend
 
   chatly-server:
     image: oven/bun:latest
+    container_name: chatly-server
     volumes:
-      - .:/app # Mount the current directory to /app in the container
-    working_dir: /app # Set the working directory
-    command: bun index.ts # Start the server
+      - .:/app
+    working_dir: /app
+    command: bun index.ts
     ports:
-      - "3000:3000" # Expose and map port 3000
+      - "3000:3000"
     depends_on:
-      - livekit # Ensure livekit service starts before the app
+      - livekit
+      - timescaledb
+    networks:
+      - backend
+
+volumes:
+  timescaledb_data:
+
+networks:
+  backend:
