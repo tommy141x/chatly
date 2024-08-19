@@ -18,7 +18,7 @@ curl -fsSL https://bun.sh/install | bash
 
 To contribute to the project, you'll first need to clone the repository:
 ```
-git clone https://github.com/tommy141x/chatly.git && cd chatly
+git clone https://github.com/tommy141x/chatly.git && cd chatly/chatly-client
 ```
 ## Install dependencies:
 
@@ -26,7 +26,7 @@ After cloning the repository, install the required dependencies using Bun:
 ```
 bun install
 ```
-## Run the development server:
+## Run the development client:
 
 To start the Tauri application in development mode, run:
 ```
