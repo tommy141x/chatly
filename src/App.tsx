@@ -38,9 +38,9 @@ function App() {
   }, []);
 
   return (
-    <>
+    <div className="flex flex-col h-screen">
       <TitleBar />
-      <div className="flex flex-col items-center justify-center h-[96vh] bg-background">
+      <div className="flex-1 flex items-center justify-center bg-background">
         <Switch>
           <Route path="/">
             <main className="flex-grow text-primary p-6">
@@ -61,7 +61,7 @@ function App() {
           </Route>
         </Switch>
       </div>
-    </>
+    </div>
   );
 }
 

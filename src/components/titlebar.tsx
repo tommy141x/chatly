@@ -34,7 +34,7 @@ function TitleBar() {
 
   return (
     <div
-      className="sticky top-0 z-50 h-[4vh] flex items-center justify-between text-primary bg-muted"
+      className="sticky top-0 z-50 h-9 w-full flex items-center justify-between text-primary bg-muted"
       data-tauri-drag-region
     >
       <div className="flex items-center">
