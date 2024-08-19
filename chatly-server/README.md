@@ -1,15 +1,15 @@
-# chatly-server
+## Development Environment Setup for Chatly Server
+
+### Prerequisites
 
 To install dependencies:
 
-```bash
+``bash
 bun install
-```
+``
 
 To run:
 
-```bash
-bun run index.ts
-```
-
-This project was created using `bun init` in bun v1.1.23. [Bun](https://bun.sh) is a fast all-in-one JavaScript runtime.
+``bash
+docker compose up -d
+``
