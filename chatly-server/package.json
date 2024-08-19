@@ -1,0 +1,14 @@
+{
+  "name": "chatly-server",
+  "module": "index.ts",
+  "type": "module",
+  "devDependencies": {
+    "@types/bun": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "livekit-server-sdk": "^2.6.1"
+  }
+}

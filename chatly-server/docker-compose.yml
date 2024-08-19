@@ -1,0 +1,21 @@
+version: "3.8"
+
+services:
+  livekit:
+    image: livekit/livekit-server:latest
+    ports:
+      - "7880:7880" # Expose and map port 7880 (default port for LiveKit)
+    command: start-server --config /path/to/config.yaml # Adjust the command and config path as needed
+    volumes:
+      - ./livekit-config:/path/to/config.yaml # Adjust the path for your config file if needed
+
+  chatly-server:
+    image: oven/bun:latest
+    volumes:
+      - .:/app # Mount the current directory to /app in the container
+    working_dir: /app # Set the working directory
+    command: bun index.ts # Start the server
+    ports:
+      - "3000:3000" # Expose and map port 3000
+    depends_on:
+      - livekit # Ensure livekit service starts before the app
