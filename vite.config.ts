@@ -13,6 +13,9 @@ export default defineConfig({
     port: 1420,
     strictPort: true,
   },
+  define: {
+    global: "window",
+  },
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),

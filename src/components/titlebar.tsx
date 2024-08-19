@@ -1,17 +1,28 @@
+import React, { useState } from "react";
 import { Minus, X, Square } from "lucide-react";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { getCurrentWindow } from "@tauri-apps/api/window";
 import isTauri, { isTauriDesktop } from "@/components/isTauri";
 
-function TitleBar({ children }) {
+let titleBarComponents = [];
+let setTitleBarComponentsState = null;
+
+export function setTitleBar(component) {
+  if (setTitleBarComponentsState) {
+    setTitleBarComponentsState([component]);
+  } else if (titleBarComponents == []) {
+    titleBarComponents.push(component);
+  }
+}
+
+export function getTitleBar() {
+  return titleBarComponents;
+}
+
+function TitleBar() {
+  const [components, setComponents] = useState(titleBarComponents);
+  setTitleBarComponentsState = setComponents;
+
   let appWindow;
   if (isTauriDesktop) {
     appWindow = getCurrentWindow();
@@ -20,22 +31,17 @@ function TitleBar({ children }) {
   const handleMinimize = () => appWindow.minimize();
   const handleMaximize = () => appWindow.toggleMaximize();
   const handleClose = () => appWindow.close();
-  const handleTitleBarDrag = async () => {
-    if (isTauriDesktop) {
-      try {
-        await appWindow.startDragging();
-      } catch (err) {
-        console.error("Error starting drag:", err);
-      }
-    }
-  };
 
   return (
     <div
-      className="flex items-center justify-between text-primary bg-muted"
+      className="sticky top-0 z-50 h-[4vh] flex items-center justify-between text-primary bg-muted"
       data-tauri-drag-region
     >
-      <div className="flex items-center">{children}</div>
+      <div className="flex items-center">
+        {components.map((Component, index) => (
+          <React.Fragment key={index}>{Component}</React.Fragment>
+        ))}
+      </div>
       {isTauriDesktop && (
         <div className="flex pointer-events-auto">
           <Button
