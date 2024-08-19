@@ -1,0 +1,97 @@
+services:
+  caddy:
+    image: livekit/caddyl4
+    command: run --config /etc/caddy.yaml --adapter yaml
+    restart: unless-stopped
+    network_mode: "host"
+    volumes:
+      - ./caddy.yaml:/etc/caddy.yaml
+      - ./caddy_data:/data
+  livekit:
+    image: livekit/livekit-server:latest
+    command: --config /etc/livekit.yaml
+    restart: unless-stopped
+    network_mode: "host"
+    volumes:
+      - ./livekit.yaml:/etc/livekit.yaml
+  redis:
+    image: redis:7-alpine
+    command: redis-server /etc/redis.conf
+    restart: unless-stopped
+    network_mode: "host"
+    volumes:
+      - ./redis.conf:/etc/redis.conf
+  egress:
+    image: livekit/egress:latest
+    restart: unless-stopped
+    environment:
+      - EGRESS_CONFIG_FILE=/etc/egress.yaml
+    network_mode: "host"
+    volumes:
+      - ./egress.yaml:/etc/egress.yaml
+    cap_add:
+      - CAP_SYS_ADMIN
+  ingress:
+    image: livekit/ingress:latest
+    restart: unless-stopped
+    environment:
+      - INGRESS_CONFIG_FILE=/etc/ingress.yaml
+    network_mode: "host"
+    volumes:
+      - ./ingress.yaml:/etc/ingress.yaml
+
+
+keys:
+    key: sec
+
+$ cat redis.conf
+bind 127.0.0.1 ::1
+protected-mode yes
+port 6379
+timeout 0
+tcp-keepalive 300
+
+$ cat egress.yaml
+redis:
+    address: localhost:6379
+    username: ""
+    password: ""
+    db: 0
+    use_tls: false
+    sentinel_master_name: ""
+    sentinel_username: ""
+    sentinel_password: ""
+    sentinel_addresses: []
+    cluster_addresses: []
+    max_redirects: null
+api_key:
+api_secret:
+
+
+$ cat ingress.yaml
+redis:
+    address: localhost:6379
+    username: ""
+    password: ""
+    db: 0
+    use_tls: false
+    sentinel_master_name: ""
+    sentinel_username: ""
+    sentinel_password: ""
+    sentinel_addresses: []
+    cluster_addresses: []
+    max_redirects: null
+api_key:
+api_secret:
+ws_url: wss://live.
+rtmp_port: 1935
+whip_port: 8080
+http_relay_port: 9090
+logging:
+    json: false
+    level: ""
+development: false
+rtc_config:
+    udp_port: 7885
+    use_external_ip: true
+    enable_loopback_candidate: false

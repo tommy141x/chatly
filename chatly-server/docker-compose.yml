@@ -1,13 +1,21 @@
-version: "3.8"
-
 services:
   livekit:
     image: livekit/livekit-server:latest
     ports:
-      - "7880:7880" # Expose and map port 7880 (default port for LiveKit)
-    command: start-server --config /path/to/config.yaml # Adjust the command and config path as needed
+      - "7880:7880"
+      - "7881:7881"
+      - "7882:7882/udp"
+    command: --dev --config /livekit.yaml
     volumes:
-      - ./livekit-config:/path/to/config.yaml # Adjust the path for your config file if needed
+      - ./livekit.yaml:/livekit.yaml # Adjust the path for your config file if needed
+    depends_on:
+      - redis
+
+  redis:
+    image: redis:7-alpine
+    command: redis-server --protected-mode no
+    ports:
+      - "6379:6379"
 
   chatly-server:
     image: oven/bun:latest
