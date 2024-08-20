@@ -10,15 +10,19 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import store from "@/lib/store";
+import { useState } from "state-pool";
 
 function Login() {
-  const [count, setCount] = store.useState("count");
+  const [server, setServer] = store.useState("server");
   return (
     <Card className="w-full max-w-sm border-none">
       <CardHeader>
+        <Button variant="outline">
+          {server.name} - {server.description}
+        </Button>
         <CardTitle className="text-2xl">Login</CardTitle>
         <CardDescription>
-          Enter your email below to login to your account. {count}
+          Enter your email below to login to your account.
         </CardDescription>
       </CardHeader>
       <CardContent className="grid gap-4">

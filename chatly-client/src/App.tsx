@@ -1,4 +1,5 @@
 import { useEffect, useContext } from "react";
+import { useState } from "state-pool";
 import TitleBar, { setTitleBar } from "@/components/titlebar";
 import Login from "@/components/login";
 import { Link, Route, Switch } from "wouter";
@@ -15,16 +16,22 @@ import {
 import { Button } from "@/components/ui/button";
 import isTauri, { isTauriDesktop } from "@/components/isTauri";
 import store from "@/lib/store";
+import { pingServer } from "@/lib/client";
 
 function App() {
-  const [count, setCount] = store.useState("count");
+  const [serverPinged, setServerPinged] = useState(false);
   useEffect(() => {
     document.documentElement.classList.add("dark");
+    const pingServerAndSetState = async () => {
+      await pingServer().trigger();
+      setServerPinged(true);
+    };
+    pingServerAndSetState();
     setTitleBar(
       <DropdownMenu className="bg-transparent">
         <DropdownMenuTrigger asChild className="!ring-0">
           <Button variant="ghost" className="hover:bg-primary/10 p-2">
-            <p className="font-bold">{count}</p>
+            <p className="font-bold">Chatly</p>
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent className="border-none">
@@ -35,16 +42,9 @@ function App() {
             <Link href="/">Home</Link>
           </DropdownMenuItem>
         </DropdownMenuContent>
-        <Button
-          onClick={(e) => {
-            setCount((e) => e + 1);
-          }}
-        >
-          Increment
-        </Button>
       </DropdownMenu>,
     );
-  }, [count]);
+  }, []);
 
   return (
     <div className="flex flex-col h-screen">
@@ -64,7 +64,7 @@ function App() {
           <Route>
             <main className="flex-grow text-primary p-6">
               <h1 className="text-2xl font-bold">
-                Oops! Looks like you got lost!
+                Fallback route, nothing here
               </h1>
             </main>
           </Route>
