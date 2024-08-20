@@ -23,8 +23,12 @@ function App() {
   useEffect(() => {
     document.documentElement.classList.add("dark");
     const pingServerAndSetState = async () => {
-      await pingServer().trigger();
-      setServerPinged(true);
+      try {
+        await pingServer(); // Call the debounced function directly
+        setServerPinged(true);
+      } catch (error) {
+        console.error("Error during server ping:", error);
+      }
     };
     pingServerAndSetState();
     setTitleBar(

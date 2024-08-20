@@ -15,7 +15,6 @@ const pingServer = debounce(
 
         if (response.ok) {
           store.setState("server", server);
-          console.log("Updated state " + server.name);
           resolve(data); // Resolve with the fetched data
         } else {
           console.error("Failed to ping server:", data);
