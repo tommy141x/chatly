@@ -1,0 +1,2 @@
+so if the server and the client both need api key and secret, how do we hotswap servers?
+also api_endpoint in .env should be like "defaultapiendpoint"

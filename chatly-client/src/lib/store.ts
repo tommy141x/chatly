@@ -1,10 +1,9 @@
 import { createStore } from "state-pool";
 const store = createStore();
-store.setState("count", 0);
 store.setState("server", {
-  url: "http://localhost:3000",
-  name: "My Server",
-  description: "This is my server.",
+  url: import.meta.env.VITE_DEFAULT_API_ENDPOINT,
+  name: "Chatly",
+  description: "A chat application.",
 });
 
 export default store;
