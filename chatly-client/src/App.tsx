@@ -1,7 +1,7 @@
 import { useEffect, useContext } from "react";
 import { useState } from "state-pool";
 import TitleBar, { setTitleBar } from "@/components/titlebar";
-import Login from "@/components/login";
+import SignUp from "@/components/signup";
 import { Link, Route, Switch } from "wouter";
 import "@/styles/globals.css";
 
@@ -40,7 +40,7 @@ function App() {
         </DropdownMenuTrigger>
         <DropdownMenuContent className="border-none">
           <DropdownMenuItem className="cursor-pointer" asChild>
-            <Link href="/login">Login</Link>
+            <Link href="/signup">SignUp</Link>
           </DropdownMenuItem>
           <DropdownMenuItem className="cursor-pointer" asChild>
             <Link href="/">Home</Link>
@@ -62,8 +62,8 @@ function App() {
               </h1>
             </main>
           </Route>
-          <Route path="/login">
-            <Login />
+          <Route path="/signup">
+            <SignUp />
           </Route>
           <Route>
             <main className="flex-grow text-primary p-6">

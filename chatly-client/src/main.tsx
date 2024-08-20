@@ -5,19 +5,37 @@ import { DevError, ProdError } from "@/components/error";
 // Error Boundary Component
 class ErrorBoundary extends Component<
   { children: React.ReactNode },
-  ErrorBoundaryState
+  { hasError: boolean; error: Error }
 > {
   constructor(props: { children: React.ReactNode }) {
     super(props);
     this.state = {
       hasError: false,
-      error: new Error("An unknown error has occured"),
+      error: new Error("An unknown error has occurred"),
     };
   }
 
   static getDerivedStateFromError(error: Error) {
-    // Update state to indicate an error has occurred
     return { hasError: true, error };
+  }
+
+  componentDidCatch(error: Error, errorInfo: ErrorInfo) {
+    // Render DevError or ProdError based on the environment
+    if (import.meta.env.MODE === "development") {
+      this.setState({ error });
+    } else {
+      this.setState({ error });
+    }
+    // No console logging here
+  }
+
+  componentDidUpdate(prevProps: { children: React.ReactNode }) {
+    if (this.props.children !== prevProps.children) {
+      this.setState({
+        hasError: false,
+        error: new Error("An unknown error has occurred"),
+      });
+    }
   }
 
   render() {
@@ -28,19 +46,18 @@ class ErrorBoundary extends Component<
         <ProdError />
       );
     }
-
     return this.props.children;
   }
 }
 
 // Main render logic
-(async () => {
+const renderApp = async () => {
   try {
-    const App = await import("@/App");
+    const { default: App } = await import("@/App");
     ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
       <ErrorBoundary>
         <React.StrictMode>
-          <App.default />
+          <App />
         </React.StrictMode>
       </ErrorBoundary>,
     );
@@ -48,11 +65,13 @@ class ErrorBoundary extends Component<
     ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
       <React.StrictMode>
         {import.meta.env.MODE === "development" ? (
-          <DevError error={error} />
+          <DevError error={error as Error} />
         ) : (
           <ProdError />
         )}
       </React.StrictMode>,
     );
   }
-})();
+};
+
+renderApp();

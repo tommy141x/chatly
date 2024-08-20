@@ -10,25 +10,35 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import store from "@/lib/store";
+import { navigate } from "wouter/use-browser-location";
 import { useState } from "state-pool";
 
-function Login() {
+function SignUp() {
   const [server, setServer] = store.useState("server");
+  const [user, setUser] = store.useState("user");
+  //we can fetch at server.url + "/api/auth/signup"
+  //we should update the user state with the response
+  //we can navigate with  navigate("/", { replace: true });after a succesful signup
   return (
     <Card className="w-full max-w-sm border-none">
       <CardHeader>
         <Button variant="outline">
           {server.name} - {server.description}
         </Button>
-        <CardTitle className="text-2xl">Login</CardTitle>
+        <CardTitle className="text-2xl">Sign Up</CardTitle>
         <CardDescription>
-          Enter your email below to login to your account.
+          Enter your username below to create your account.
         </CardDescription>
       </CardHeader>
       <CardContent className="grid gap-4">
         <div className="grid gap-2">
-          <Label htmlFor="email">Email</Label>
-          <Input id="email" type="email" placeholder="m@example.com" required />
+          <Label htmlFor="username">Username</Label>
+          <Input
+            id="username"
+            type="username"
+            placeholder="myusername"
+            required
+          />
         </div>
         <div className="grid gap-2">
           <Label htmlFor="password">Password</Label>
@@ -43,4 +53,4 @@ function Login() {
     </Card>
   );
 }
-export default Login;
+export default SignUp;
