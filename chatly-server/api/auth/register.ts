@@ -21,13 +21,13 @@ export default function handler(app, route) {
         return res.status(409).json({ error: "Username already exists" });
       }
 
-      // Hash the password
-      const hashedPassword = await Bun.password.hash(password);
+      // Hash the password - happens client side
+      //const hashedPassword = await Bun.password.hash(password);
 
       // Insert the new user into the database
       await query("INSERT INTO users (username, password) VALUES ($1, $2)", [
         username,
-        hashedPassword,
+        password,
       ]);
 
       res.status(201).json({ message: "User registered successfully" });

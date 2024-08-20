@@ -22,8 +22,9 @@ export default function handler(app, route) {
 
       const user = users[0];
 
-      // Verify password
-      const isMatch = await Bun.password.verify(password, user.password);
+      // Verify password - hashing happens client side
+      //const isMatch = await Bun.password.verify(password, user.password);
+      const isMatch = password === user.password;
       if (!isMatch) {
         return res.status(401).json({ error: "Invalid username or password" });
       }
