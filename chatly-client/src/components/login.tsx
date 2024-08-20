@@ -9,14 +9,16 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import store from "@/lib/store";
 
 function Login() {
+  const [count, setCount] = store.useState("count");
   return (
     <Card className="w-full max-w-sm border-none">
       <CardHeader>
         <CardTitle className="text-2xl">Login</CardTitle>
         <CardDescription>
-          Enter your email below to login to your account.
+          Enter your email below to login to your account. {count}
         </CardDescription>
       </CardHeader>
       <CardContent className="grid gap-4">
@@ -30,7 +32,9 @@ function Login() {
         </div>
       </CardContent>
       <CardFooter>
-        <Button className="w-full">Sign in</Button>
+        <Button className="w-full" onClick={() => setCount(0)}>
+          Sign in
+        </Button>
       </CardFooter>
     </Card>
   );

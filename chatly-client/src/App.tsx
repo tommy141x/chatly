@@ -14,15 +14,17 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import isTauri, { isTauriDesktop } from "@/components/isTauri";
+import store from "@/lib/store";
 
 function App() {
+  const [count, setCount] = store.useState("count");
   useEffect(() => {
     document.documentElement.classList.add("dark");
     setTitleBar(
       <DropdownMenu className="bg-transparent">
         <DropdownMenuTrigger asChild className="!ring-0">
           <Button variant="ghost" className="hover:bg-primary/10 p-2">
-            <p className="font-bold">Chatly</p>
+            <p className="font-bold">{count}</p>
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent className="border-none">
@@ -33,9 +35,16 @@ function App() {
             <Link href="/">Home</Link>
           </DropdownMenuItem>
         </DropdownMenuContent>
+        <Button
+          onClick={(e) => {
+            setCount((e) => e + 1);
+          }}
+        >
+          Increment
+        </Button>
       </DropdownMenu>,
     );
-  }, []);
+  }, [count]);
 
   return (
     <div className="flex flex-col h-screen">

@@ -28,6 +28,7 @@
     "lucide-react": "^0.427.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "state-pool": "^0.10.1",
     "tailwind-merge": "^2.5.2",
     "tailwindcss": "^4.0.0-alpha.19",
     "vaul": "^0.9.1",
