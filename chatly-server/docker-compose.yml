@@ -1,5 +1,3 @@
-version: "3"
-
 services:
   livekit:
     image: livekit/livekit-server:latest
@@ -23,10 +21,16 @@ services:
 
   timescaledb:
     image: timescale/timescaledb:latest-pg16
+    container_name: "timescaledb"
     environment:
-      POSTGRES_PASSWORD: mysecretpassword
-      POSTGRES_USER: postgres
-      POSTGRES_DB: timescaledb
+      POSTGRES_PASSWORD: ${API_SECRET}
+      POSTGRES_USER: chatly
+      POSTGRES_DB: chatlydb
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U chatly -d chatlydb"]
+      interval: 5s
+      retries: 5
+      timeout: 5s
     volumes:
       - timescaledb_data:/var/lib/postgresql/data
     networks:
@@ -42,10 +46,16 @@ services:
     ports:
       - "3000:3000"
     depends_on:
-      - livekit
-      - timescaledb
+      timescaledb:
+        condition: service_healthy
+      livekit:
+        condition: service_started
     networks:
       - backend
+    develop:
+      watch:
+        - action: rebuild
+          path: .
 
 volumes:
   timescaledb_data:
