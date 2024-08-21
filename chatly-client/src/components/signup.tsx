@@ -30,11 +30,9 @@ function SignUp() {
 
   useEffect(() => {
     const pingServerAndSetState = async () => {
-      try {
-        let ping = await pingServer();
+      let ping = await pingServer();
+      if (ping) {
         setServer({ ...ping, timestamp: Date.now() });
-      } catch (error) {
-        console.error("Error during server ping:", error);
       }
     };
     const fetchUserData = async () => {

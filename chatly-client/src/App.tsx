@@ -23,7 +23,7 @@ function App() {
   document.documentElement.classList.add("dark");
 
   return (
-    <div className="flex flex-col h-screen">
+    <div className="flex flex-col h-screen max-w-screen">
       <TitleBar />
       <div className="flex-1 flex items-center justify-center bg-background">
         <Switch>

@@ -1,25 +1,23 @@
 import debounce from "debounce";
 import store from "@/lib/store";
+import { setTitleBar } from "@/components/titlebar";
 import axios from "axios";
 
 const pingServer = debounce(
-  function () {
-    return new Promise(async (resolve, reject) => {
-      let serverURL = store.getState("server").value.url;
-      try {
-        const response = await axios.get(`${serverURL}/api/ping`);
-        //server.url = import.meta.env.VITE_DEFAULT_API_ENDPOINT;
-        let server = {};
-        server.url = serverURL;
-        server.name = response.data.server_name;
-        server.description = response.data.server_description;
-        store.setState("server", server);
-        resolve(server); // Resolve with the fetched data
-      } catch (error) {
-        console.error("Failed to ping server:", error);
-        reject(error.response?.data || error); // Reject with the error data or error
-      }
-    });
+  async function () {
+    let serverURL = store.getState("server").value.url;
+    try {
+      const response = await axios.get(`${serverURL}/api/ping`);
+      let server = {
+        url: serverURL,
+        name: response.data.server_name,
+        description: response.data.server_description,
+      };
+      return server; // Return the server object
+    } catch (error) {
+      console.error("Failed to ping server:", error);
+      return false; // Return false on error
+    }
   },
   1000,
   { immediate: true },
@@ -61,7 +59,11 @@ const logout = async () => {
 
     store.setState("user", {});
     store.setState("session", "");
+    setTitleBar();
   } catch (error) {
+    store.setState("user", {});
+    store.setState("session", "");
+    setTitleBar();
     console.error("Logout error:", error);
   }
 };

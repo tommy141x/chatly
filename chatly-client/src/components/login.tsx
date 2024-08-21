@@ -28,12 +28,9 @@ function Login() {
 
   useEffect(() => {
     const pingServerAndSetState = async () => {
-      try {
-        let ping = await pingServer();
+      let ping = await pingServer();
+      if (ping) {
         setServer({ ...ping, timestamp: Date.now() });
-        // Doesn't trigger a re-render or it's due to debouncing
-      } catch (error) {
-        console.error("Error during server ping:", error);
       }
     };
     const fetchUserData = async () => {
