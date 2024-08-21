@@ -1,11 +1,26 @@
+import React from "react";
 import {
   Route as OriginalRoute,
-  Switch as OriginialSwitch,
+  Switch as OriginalSwitch,
+  Link as OriginalLink,
   useRoute,
   useLocation,
 } from "wouter";
 import { navigate as originalNavigate } from "wouter/use-browser-location";
 import { AnimatePresence, motion } from "framer-motion";
+
+// Transition wrapper component
+const PageTransition = ({ children, location }) => (
+  <motion.div
+    key={location}
+    initial={{ opacity: 0 }}
+    animate={{ opacity: 1 }}
+    exit={{ opacity: 0 }}
+    transition={{ duration: 0.2 }}
+  >
+    {children}
+  </motion.div>
+);
 
 // Middleware Route Component with Framer Motion
 export const Route = ({
@@ -24,32 +39,31 @@ export const Route = ({
         originalNavigate(url, { replace: true });
       } else {
         // Render the component if no URL is provided
-        return (
-          <AnimatePresence>
-            <motion.div
-              initial={animation?.initial || { opacity: 0 }}
-              animate={animation?.animate || { opacity: 1 }}
-              exit={animation?.exit || { opacity: 0 }}
-            >
-              <Component />
-            </motion.div>
-          </AnimatePresence>
-        );
+        return <Component />;
       }
     };
 
     // Execute the middleware function
     const result = middleware ? middleware(next, location) : next();
-
     // If middleware returns a component or navigation URL, render it; otherwise, call next()
     return result || next();
   }
-
   return null;
 };
 
-export const Switch = ({ children }) => (
-  <OriginialSwitch>{children}</OriginialSwitch>
+export const Switch = ({ children, ...props }) => {
+  const [location] = useLocation();
+  return (
+    <AnimatePresence mode="wait" initial={false}>
+      <PageTransition location={location}>
+        <OriginalSwitch {...props}>{children}</OriginalSwitch>
+      </PageTransition>
+    </AnimatePresence>
+  );
+};
+
+export const Link = ({ children, ...props }) => (
+  <OriginalLink {...props}>{children}</OriginalLink>
 );
 
 export const navigate = originalNavigate;

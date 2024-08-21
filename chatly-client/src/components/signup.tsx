@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -10,19 +11,42 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import store from "@/lib/store";
-import { navigate } from "@/lib/router";
+import { navigate, Link } from "@/lib/router";
+import { validateUser, pingServer } from "@/lib/client";
 import { useState } from "state-pool";
 import axios from "axios";
+import debounce from "debounce";
 
 function SignUp() {
   const [server, setServer] = store.useState("server");
   const [user, setUser] = store.useState("user");
+  const [session, setSession] = store.useState("session");
 
   const [error, setError] = useState("");
   const [username, setUsername] = useState("");
   const [displayName, setDisplayName] = useState("");
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
+
+  useEffect(() => {
+    const pingServerAndSetState = async () => {
+      try {
+        let ping = await pingServer();
+        setServer({ ...ping, timestamp: Date.now() });
+      } catch (error) {
+        console.error("Error during server ping:", error);
+      }
+    };
+    const fetchUserData = async () => {
+      let user = await validateUser();
+      if (user) {
+        setUser(user);
+        navigate("/", { replace: true });
+      }
+    };
+    fetchUserData();
+    pingServerAndSetState();
+  }, []);
 
   const handleSignUp = async () => {
     try {
@@ -37,10 +61,7 @@ function SignUp() {
         { headers: { "Content-Type": "application/json" } },
       );
 
-      setUser({
-        ...user,
-        sessionToken: response.data.sessionToken,
-      });
+      setSession(response.data.sessionToken);
 
       navigate("/", { replace: true });
     } catch (error) {
@@ -48,6 +69,9 @@ function SignUp() {
       setError(error.response?.data?.error || "Login failed");
     }
   };
+  const debouncedHandleSignUp = debounce(handleSignUp, 1000, {
+    immediate: true,
+  });
 
   return (
     <Card className="w-[450px] p-5 border-none">
@@ -107,15 +131,15 @@ function SignUp() {
         </div>
       </CardContent>
       <CardFooter className="flex flex-col items-center">
-        <Button className="w-full" onClick={handleSignUp}>
+        <Button className="w-full" onClick={debouncedHandleSignUp}>
           Sign Up
         </Button>
-        <a
+        <Link
           href="/login"
           className="mt-4 text-sm text-muted-foreground hover:text-primary"
         >
           Already have an account? Sign in
-        </a>
+        </Link>
       </CardFooter>
     </Card>
   );

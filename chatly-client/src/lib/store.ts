@@ -2,7 +2,6 @@ import { createStore } from "state-pool";
 import debounce from "debounce";
 
 const store = createStore();
-
 store.persist({
   PERSIST_ENTIRE_STORE: true,
   saveState: (key, value, isInitialSet) => {
@@ -10,8 +9,8 @@ store.persist({
       try {
         const serializedState = JSON.stringify(value);
         window.localStorage.setItem(key, serializedState);
-      } catch {
-        // Ignore write errors
+      } catch (e) {
+        console.error(e);
       }
     };
 
@@ -20,7 +19,8 @@ store.persist({
       doStateSaving();
     } else {
       // Debounce subsequent saves
-      debounce(doStateSaving, 1000)(); // Adjust debounce time as needed
+      const debouncedSave = debounce(doStateSaving, 1000, { immediate: true });
+      debouncedSave();
     }
   },
   loadState: function (key, noState) {
@@ -44,22 +44,15 @@ store.persist({
   },
 });
 
-store.setState(
-  "server",
-  {
-    url: import.meta.env.VITE_DEFAULT_API_ENDPOINT,
-    name: "Chatly",
-    description: "A chat application.",
-  },
-  { persist: true },
-);
+store.setState("server", {
+  url: import.meta.env.VITE_DEFAULT_API_ENDPOINT,
+  name: "Chatly",
+  description: "",
+});
 
-store.setState(
-  "user",
-  {
-    username: "Guest",
-  },
-  { persist: true },
-);
+store.setState("user", {
+  username: "Guest",
+});
 
+store.setState("session", "");
 export default store;
