@@ -9,12 +9,35 @@ function initRoutes(app) {
     app.use(cors({ allowedHeaders: ["Content-Type", "Authorization"] }));
   }
   app.use(middleware);
+
   const routesDir = path.resolve(process.cwd(), "api");
+  const publicDir = path.resolve(process.cwd(), "pub");
+
+  function registerPublicRoutes(currentDir, baseRoute = "") {
+    fs.readdirSync(currentDir, { withFileTypes: true }).forEach((dirent) => {
+      const fullPath = path.join(currentDir, dirent.name);
+      if (dirent.isDirectory()) {
+        const routePath = `/pub${baseRoute}/${dirent.name}/:file`;
+        app.get(routePath, async (req, res) => {
+          const filePath = path.join(process.cwd(), req.path);
+          const file = Bun.file(filePath);
+          const exists = await file.exists();
+          if (exists) {
+            res.status(200).send(file);
+          } else {
+            res.status(404).send("GET " + req.path + " with a 404");
+          }
+        });
+        console.log("Registered Pub Route: " + routePath);
+        // Recursively process subdirectories
+        registerPublicRoutes(fullPath, `${baseRoute}/${dirent.name}`);
+      }
+    });
+  }
 
   function registerRoutesRecursively(currentDir, baseRoute = "") {
     fs.readdirSync(currentDir, { withFileTypes: true }).forEach((dirent) => {
       const fullPath = path.join(currentDir, dirent.name);
-
       if (dirent.isDirectory()) {
         // Recursively process subdirectories
         registerRoutesRecursively(fullPath, `${baseRoute}/${dirent.name}`);
@@ -24,7 +47,6 @@ function initRoutes(app) {
         dirent.name !== "middleware.ts"
       ) {
         const routePath = `/api${baseRoute}/${path.basename(dirent.name, ".ts")}`;
-
         import(fullPath)
           .then((module) => {
             const handler = module.default;
@@ -43,6 +65,7 @@ function initRoutes(app) {
   }
 
   registerRoutesRecursively(routesDir);
+  registerPublicRoutes(publicDir);
 }
 
 export default initRoutes;
