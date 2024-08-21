@@ -1,35 +1,16 @@
-// routes/api/user.js
-import { query } from "@/lib/db";
+import { validateUser } from "@/lib/utils";
 
 export default function handler(app, route) {
   app.get(route, async (req, res) => {
-    const sessionToken = req.headers.authorization?.split(" ")[1];
+    // Validate the user based on headers
+    const user = await validateUser(req.headers);
 
-    if (!sessionToken) {
-      return res.status(401).json({ error: "No session token provided" });
-    }
-
-    try {
-      // Fetch session and user data
-      const sessions = await query(
-        "SELECT users.* FROM sessions JOIN users ON sessions.user_id = users.id WHERE sessions.token = $1",
-        [sessionToken],
-      );
-
-      if (sessions.length === 0) {
-        return res.status(401).json({ error: "Invalid session token" });
-      }
-
-      const user = sessions[0];
-
-      // Remove sensitive information
-      delete user.password;
-
+    if (user) {
+      // If user is valid, return the user data
       res.json(user);
-    } catch (error) {
-      res
-        .status(500)
-        .json({ error: "An error occurred while fetching user data" });
+    } else {
+      // If user is invalid or token is expired, return an error
+      res.status(401).json({ error: "Invalid or expired session token" });
     }
   });
 }

@@ -9,7 +9,11 @@ const ZutWrapper: React.FC<{ error: any }> = ({ error }) => {
 
   React.useEffect(() => {
     if (containerRef.current) {
-      new Zut(error, containerRef.current);
+      try {
+        new Zut(error, containerRef.current);
+      } catch (e) {
+        console.error(e);
+      }
     }
   }, [error]);
 

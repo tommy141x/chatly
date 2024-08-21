@@ -62,6 +62,7 @@ const renderApp = async () => {
       </ErrorBoundary>,
     );
   } catch (error) {
+    console.error(error);
     ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
       <React.StrictMode>
         {import.meta.env.MODE === "development" ? (

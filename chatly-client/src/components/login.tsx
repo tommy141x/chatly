@@ -10,30 +10,23 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import store from "@/lib/store";
-import { navigate } from "@/lib/router";
+import { navigate } from "wouter/use-browser-location";
 import { useState } from "state-pool";
 import axios from "axios";
 
-function SignUp() {
+function Login() {
   const [server, setServer] = store.useState("server");
   const [user, setUser] = store.useState("user");
 
   const [error, setError] = useState("");
-  const [username, setUsername] = useState("");
-  const [displayName, setDisplayName] = useState("");
+  const [userInput, setUserInput] = useState("");
   const [password, setPassword] = useState("");
-  const [email, setEmail] = useState("");
 
-  const handleSignUp = async () => {
+  const handleLogin = async () => {
     try {
       const response = await axios.post(
-        `${server.url}/api/auth/signup`,
-        {
-          username,
-          displayName,
-          password: password,
-          email,
-        },
+        `${server.url}/api/auth/login`,
+        { user: userInput, password: password },
         { headers: { "Content-Type": "application/json" } },
       );
 
@@ -44,7 +37,7 @@ function SignUp() {
 
       navigate("/", { replace: true });
     } catch (error) {
-      console.error("Sign up error:", error);
+      console.error("Login error:", error);
       setError(error.response?.data?.error || "Login failed");
     }
   };
@@ -55,44 +48,21 @@ function SignUp() {
         <Button variant="outline">
           {server.name} - {server.description}
         </Button>
-        <CardTitle className="text-2xl">Sign Up</CardTitle>
+        <CardTitle className="text-2xl">Log In</CardTitle>
         <CardDescription className={error ? "text-destructive" : ""}>
-          {error ||
-            "Enter your username, display name, password, and email below to create your account."}
+          {error || "Enter your username or email, and password to log in."}
         </CardDescription>
       </CardHeader>
       <CardContent className="grid gap-4">
         <div className="grid gap-2">
-          <Label htmlFor="email">Email</Label>
+          <Label htmlFor="user">Username or Email</Label>
           <Input
-            id="email"
-            type="email"
-            placeholder="myemail@example.com"
-            required
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-        </div>
-        <div className="grid gap-2">
-          <Label htmlFor="username">Username</Label>
-          <Input
-            id="username"
+            id="user"
             type="text"
-            placeholder="myusername"
+            placeholder="myusername or myemail@example.com"
             required
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-          />
-        </div>
-        <div className="grid gap-2">
-          <Label htmlFor="displayName">Display Name</Label>
-          <Input
-            id="displayName"
-            type="text"
-            placeholder="My Name"
-            required
-            value={displayName}
-            onChange={(e) => setDisplayName(e.target.value)}
+            value={userInput}
+            onChange={(e) => setUserInput(e.target.value)}
           />
         </div>
         <div className="grid gap-2">
@@ -107,18 +77,18 @@ function SignUp() {
         </div>
       </CardContent>
       <CardFooter className="flex flex-col items-center">
-        <Button className="w-full" onClick={handleSignUp}>
-          Sign Up
+        <Button className="w-full" onClick={handleLogin}>
+          Log In
         </Button>
         <a
-          href="/login"
+          href="/signup"
           className="mt-4 text-sm text-muted-foreground hover:text-primary"
         >
-          Already have an account? Sign in
+          Don't have an account? Sign up
         </a>
       </CardFooter>
     </Card>
   );
 }
 
-export default SignUp;
+export default Login;

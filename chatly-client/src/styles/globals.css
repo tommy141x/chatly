@@ -107,6 +107,11 @@
     }
 }
 
+html,
+body {
+    background-color: var(--color-background);
+}
+
 .border {
     border-color: #e4e5e9;
 }

@@ -4,9 +4,9 @@
   "version": "0.0.1",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "tsc && vite build",
-    "preview": "vite preview",
+    "dev": "bunx --bun vite",
+    "build": "tsc && bunx --bun vite build",
+    "preview": "bunx --bun vite preview",
     "tauri": "tauri"
   },
   "dependencies": {
@@ -23,9 +23,11 @@
     "@tauri-apps/api": "^2.0.0-rc.0",
     "@tauri-apps/plugin-notification": "^2.0.0-rc.0",
     "@tauri-apps/plugin-shell": "^2.0.0-rc.0",
+    "axios": "^1.7.4",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "debounce": "^2.1.0",
+    "framer-motion": "^11.3.28",
     "livekit-client": "^2.5.0",
     "lucide-react": "^0.427.0",
     "react": "^18.2.0",
@@ -38,6 +40,7 @@
   },
   "devDependencies": {
     "@tauri-apps/cli": "^2.0.0-rc.3",
+    "@types/bun": "^1.1.6",
     "@types/node": "^22.3.0",
     "@types/react": "^18.2.15",
     "@types/react-dom": "^18.2.7",

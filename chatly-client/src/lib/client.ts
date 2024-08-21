@@ -1,28 +1,20 @@
 import debounce from "debounce";
 import store from "@/lib/store";
+import axios from "axios";
 
 const pingServer = debounce(
   function () {
     return new Promise(async (resolve, reject) => {
       let server = store.getState("server").value;
-
       try {
-        const response = await fetch(`${server.url}/api/ping`);
-        const data = await response.json();
-
-        server.name = data.server_name;
-        server.description = data.server_description;
-
-        if (response.ok) {
-          store.setState("server", server);
-          resolve(data); // Resolve with the fetched data
-        } else {
-          console.error("Failed to ping server:", data);
-          reject(data); // Reject with the error data
-        }
+        const response = await axios.get(`${server.url}/api/ping`);
+        server.name = response.data.server_name;
+        server.description = response.data.server_description;
+        store.setState("server", server);
+        resolve(response.data); // Resolve with the fetched data
       } catch (error) {
-        console.error("Error pinging server:", error);
-        reject(error); // Reject with the error
+        console.error("Failed to ping server:", error);
+        reject(error.response?.data || error); // Reject with the error data or error
       }
     });
   },
@@ -30,4 +22,21 @@ const pingServer = debounce(
   { immediate: true },
 );
 
-export { pingServer };
+const logout = async () => {
+  const server = store.getState("server").value;
+  const user = store.getState("user").value;
+
+  try {
+    await axios.post(`${server.url}/api/auth/logout`, null, {
+      headers: {
+        Authorization: `Bearer ${user.sessionToken}`,
+      },
+    });
+
+    store.setState("user", {});
+  } catch (error) {
+    console.error("Logout error:", error);
+  }
+};
+
+export { pingServer, logout };

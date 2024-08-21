@@ -4,8 +4,8 @@ import debounce from "debounce";
 const store = createStore();
 
 store.persist({
-  PERSIST_ENTIRE_STORE: false, // Change this to true if you want to persist the entire store
-  saveState: debounce((key, value, isInitialSet) => {
+  PERSIST_ENTIRE_STORE: true,
+  saveState: (key, value, isInitialSet) => {
     const doStateSaving = () => {
       try {
         const serializedState = JSON.stringify(value);
@@ -20,9 +20,9 @@ store.persist({
       doStateSaving();
     } else {
       // Debounce subsequent saves
-      doStateSaving();
+      debounce(doStateSaving, 1000)(); // Adjust debounce time as needed
     }
-  }, 1000), // Adjust debounce time as needed
+  },
   loadState: function (key, noState) {
     try {
       const serializedState = window.localStorage.getItem(key);
@@ -58,7 +58,6 @@ store.setState(
   "user",
   {
     username: "Guest",
-    token: "",
   },
   { persist: true },
 );

@@ -1,8 +1,13 @@
 import middleware from "@/api/middleware";
 import fs from "fs";
 import path from "path";
+import cors from "buncors";
 
 function initRoutes(app) {
+  //Allow all origins in development mode
+  if (process.env.DEV_MODE) {
+    app.use(cors({ allowedHeaders: ["Content-Type", "Authorization"] }));
+  }
   app.use(middleware);
   const routesDir = path.resolve(process.cwd(), "api");
 
@@ -24,6 +29,10 @@ function initRoutes(app) {
           .then((module) => {
             const handler = module.default;
             handler(app, routePath);
+            app.options(
+              routePath,
+              cors({ allowedHeaders: ["Content-Type", "Authorization"] }),
+            );
             console.log("Registered API Route: " + routePath);
           })
           .catch((err) => {
