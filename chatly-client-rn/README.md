@@ -21,7 +21,7 @@ curl -fsSL https://bun.sh/install | bash
 
 To contribute to the project, you'll first need to clone the repository:
 ```
-git clone https://github.com/tommy141x/chatly.git && cd chatly/chatly-client
+git clone https://github.com/tommy141x/chatly.git && cd chatly/chatly-client-rn
 ```
 ## Install dependencies:
 
