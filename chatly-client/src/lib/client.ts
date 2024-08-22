@@ -38,9 +38,11 @@ const validateUser = async () => {
     if (userData) {
       return userData;
     } else {
+      setTitleBar();
       return false;
     }
   } catch (error) {
+    setTitleBar();
     console.error("Fetch error:", error.message, error.response?.data);
     return false;
   }

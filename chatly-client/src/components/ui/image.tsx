@@ -4,6 +4,15 @@ import axios from "axios";
 
 const cacheSize = 100;
 
+// Function to clear all cached images
+export const clearImageCache = () => {
+  Object.keys(localStorage).forEach((key) => {
+    if (key.startsWith("cachedImage:")) {
+      localStorage.removeItem(key);
+    }
+  });
+};
+
 const Image: React.FC<CachedImageProps> = (props) => {
   const [imageUrl, setImageUrl] = useState<string | null>(null);
   const cacheKey = `cachedImage:${props.src}`;
@@ -21,9 +30,9 @@ const Image: React.FC<CachedImageProps> = (props) => {
           const cachedData = localStorage.getItem(cacheKey);
           if (cachedData) {
             console.log("Using cached image");
-            const { localUrl, expiration } = JSON.parse(cachedData);
+            const { base64Data, expiration } = JSON.parse(cachedData);
             if (new Date(expiration) > new Date()) {
-              setImageUrl(localUrl);
+              setImageUrl(`data:image/jpeg;base64,${base64Data}`);
               return;
             }
           }
@@ -32,10 +41,14 @@ const Image: React.FC<CachedImageProps> = (props) => {
           setImageUrl(props.src);
 
           const response = await axios.get(props.src, {
-            responseType: "blob",
+            responseType: "arraybuffer",
           });
-          const blob = response.data;
-          const localUrl = URL.createObjectURL(blob);
+          const base64Data = btoa(
+            new Uint8Array(response.data).reduce(
+              (data, byte) => data + String.fromCharCode(byte),
+              "",
+            ),
+          );
 
           const expirationDate = new Date();
           expirationDate.setDate(expirationDate.getDate() + 7);
@@ -43,7 +56,7 @@ const Image: React.FC<CachedImageProps> = (props) => {
           localStorage.setItem(
             cacheKey,
             JSON.stringify({
-              localUrl,
+              base64Data,
               expiration: expirationDate.toISOString(),
             }),
           );

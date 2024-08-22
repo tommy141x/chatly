@@ -1,9 +1,10 @@
+import { useEffect, useRef } from "react";
 import { navigate, Link } from "@/lib/router";
 import Image from "@/components/ui/image";
 import store from "@/lib/store";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { HousePlus } from "lucide-react";
+import { HousePlus, MessageCircleMore } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Modal,
@@ -51,15 +52,19 @@ function SideBar() {
 
   return (
     <div className="bg-secondary rounded-3xl h-full w-full gap-4 flex flex-col items-center justify-start pt-4">
+      <Button variant="outline" className="w-14 h-14 rounded-full">
+        <MessageCircleMore className="h-14 w-14 text-primary" />
+      </Button>
       <Image
         src="https://mir-s3-cdn-cf.behance.net/project_modules/disp/ca5d4f138939351.6274c569dd1b6.gif"
-        className="w-14 h-14 mx-auto rounded-full"
+        className="w-14 h-14 mx-auto rounded-full pointer-events-none"
       />
+
       <Modal open={isOpen} onOpenChange={setIsOpen}>
         <ModalTrigger asChild>
-          <Button variant="outline" className="w-14 h-14 rounded-full">
-            <HousePlus className="h-14 w-14 text-primary" />
-          </Button>
+          <div className="bg-background hover:bg-primary/10 transition duration-150 flex items-center justify-center w-14 h-14 rounded-full">
+            <HousePlus className="h-7 w-7 text-primary" />
+          </div>
         </ModalTrigger>
         <ModalBody className="text-primary">
           <ModalContent>
