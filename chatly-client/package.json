@@ -31,6 +31,7 @@
     "framer-motion": "^11.3.28",
     "livekit-client": "^2.5.0",
     "lucide-react": "^0.427.0",
+    "rc-image": "^7.10.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "state-pool": "^0.10.1",

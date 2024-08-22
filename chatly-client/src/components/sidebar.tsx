@@ -1,11 +1,12 @@
 import { navigate, Link } from "@/lib/router";
+import Image from "@/components/ui/image";
 import store from "@/lib/store";
 import { useState } from "state-pool";
 
 function SideBar() {
   return (
     <div className="bg-secondary rounded-3xl h-full w-full flex flex-col items-center justify-start">
-      <img
+      <Image
         src="https://mir-s3-cdn-cf.behance.net/project_modules/disp/ca5d4f138939351.6274c569dd1b6.gif"
         className="w-14 h-14 mx-auto rounded-full mt-4"
       />
