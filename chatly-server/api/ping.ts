@@ -16,6 +16,7 @@ export default function handler(app, route) {
         });
       } else {
         // If user is invalid or token is expired, return the server name and description
+        // TODO: Return version number from package.json
         return res.json({
           server_name: process.env.SERVER_NAME,
           server_description: process.env.SERVER_DESCRIPTION,

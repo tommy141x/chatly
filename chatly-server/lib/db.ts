@@ -42,17 +42,22 @@ async function initDB() {
         notifications JSONB,
         blocked_users UUID[],
         join_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-        language VARCHAR(10),
-        servers JSONB,
-        groups JSONB,
-        sessions JSONB
+        language VARCHAR(10)
     );
   `;
   await sql`
-    CREATE TABLE IF NOT EXISTS relationships (
+    CREATE TABLE IF NOT EXISTS sessions (
+      id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+      user_id UUID REFERENCES users(id),
+      expires_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP + INTERVAL '7 days'
+    );
+  `;
+  await sql`
+    CREATE TABLE IF NOT EXISTS user_relationships (
         id SERIAL PRIMARY KEY,
         follower_id UUID REFERENCES users(id),
-        followed_id UUID REFERENCES users(id)
+        followed_id UUID REFERENCES users(id),
+        blocked BOOLEAN
     );
   `;
   await sql`
@@ -71,25 +76,41 @@ async function initDB() {
         name VARCHAR(255) NOT NULL,
         bio TEXT,
         owner_id UUID REFERENCES users(id),
-        members JSONB,
         categories JSONB,
         channels JSONB,
         roles JSONB
     );
   `;
   await sql`
+    CREATE TABLE IF NOT EXISTS server_relationships (
+        id SERIAL PRIMARY KEY,
+        user_id UUID REFERENCES users(id),
+        server_id INT REFERENCES servers(id),
+        roles JSONB,
+        joined_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        banned BOOLEAN
+    );
+  `;
+  await sql`
     CREATE TABLE IF NOT EXISTS group_dms (
         id SERIAL PRIMARY KEY,
-        members UUID[],
         name VARCHAR(255),
         owner_id UUID REFERENCES users(id),
         icon VARCHAR(255)
     );
   `;
   await sql`
-    CREATE TABLE IF NOT EXISTS dms (
+    CREATE TABLE IF NOT EXISTS group_dm_relationships (
         id SERIAL PRIMARY KEY,
-        members UUID[],
+        user_id UUID REFERENCES users(id),
+        group_dm_id INT REFERENCES group_dms(id)
+    );
+  `;
+  await sql`
+    CREATE TABLE IF NOT EXISTS dm_relationships (
+        id SERIAL PRIMARY KEY,
+        sender_id UUID REFERENCES users(id),
+        receiver_id UUID REFERENCES users(id),
         created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
     );
   `;
@@ -102,7 +123,7 @@ async function initDB() {
         reactions JSONB,
         attachments JSONB,
         mentions UUID[],
-        location_id UUID
+        location_id INT
     );
   `;
   console.log("Tables created successfully.");

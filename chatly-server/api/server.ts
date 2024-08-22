@@ -3,7 +3,6 @@ import { query } from "@/lib/db";
 
 export default function handler(app, route) {
   app.post(route, async (req, res) => {
-    // Create a new server
     try {
       const user = await validateUser(req.headers);
       if (!user) {
@@ -11,30 +10,49 @@ export default function handler(app, route) {
           .status(401)
           .json({ error: "Invalid or expired session token" });
       }
+      const { name, bio } = req.body;
 
-      const { name, bio, categories, channels, roles } = req.body;
-      const members = JSON.stringify([user.id]);
+      const categories = [
+        { id: 1, name: "Welcome" },
+        { id: 2, name: "Lounge" },
+      ];
 
-      await query(
+      // Channels reference categories by ID
+      const channels = [
+        { name: "general", type: "text", category: 1 },
+        { name: "voice", type: "voice", category: 2 },
+      ];
+
+      const roles = [];
+
+      // Insert new server
+      const [newServer] = await query(
         `
-        INSERT INTO servers (name, bio, owner_id, members, categories, channels, roles)
-        VALUES (${name}, ${bio}, ${user.id}, ${members}, ${JSON.stringify(categories)}, ${JSON.stringify(channels)}, ${JSON.stringify(roles)})
+        INSERT INTO servers (name, bio, owner_id, categories, roles)
+        VALUES ($1, $2, $3, $4, $5)
+        RETURNING id
         `,
-        [],
+        [name, bio, user.id, categories, roles],
       );
 
-      res
-        .status(201)
-        .json({
-          id,
-          name,
-          bio,
-          owner_id: user.id,
-          members: [user.id],
-          categories,
-          channels,
-          roles,
-        });
+      // Add owner to server_relationships
+      await query(
+        `
+        INSERT INTO server_relationships (user_id, server_id)
+        VALUES ($1, $2, $3)
+        `,
+        [user.id, newServer.id, []],
+      );
+
+      res.status(201).json({
+        id: newServer.id,
+        name,
+        bio,
+        owner_id: user.id,
+        categories,
+        channels,
+        roles,
+      });
     } catch (error) {
       console.error(error);
       res.status(500).json({ error: "Failed to create server" });
@@ -50,19 +68,21 @@ export default function handler(app, route) {
           .status(401)
           .json({ error: "Invalid or expired session token" });
       }
-
       const { id } = req.query;
       const [server] = await query(
         `
-        SELECT * FROM servers WHERE id = ${id}
+        SELECT s.*,
+               (SELECT JSON_AGG(user_id)
+                FROM server_relationships
+                WHERE server_id = s.id) AS members
+        FROM servers s
+        WHERE s.id = $1
         `,
-        [],
+        [id],
       );
-
       if (!server) {
         return res.status(404).json({ error: "Server not found" });
       }
-
       res.json(server);
     } catch (error) {
       console.error(error);

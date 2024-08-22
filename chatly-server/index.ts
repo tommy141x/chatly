@@ -5,8 +5,8 @@ import initRoutes from "@/lib/router";
 const app = server();
 
 //await softWipeDB();
-//await wipeDB();
-//await initDB();
+await wipeDB();
+await initDB();
 initRoutes(app);
 
 app.listen(process.env.PORT, () => {

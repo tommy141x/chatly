@@ -16,29 +16,15 @@ export default function handler(app, route) {
     }
 
     try {
-      // Find the user with the given session token
+      // Delete the session with the given token
       const result = await query(
-        `
-          SELECT *
-          FROM users
-          WHERE sessions ? '${token}'
-        `,
+        "DELETE FROM sessions WHERE id = $1 RETURNING *",
+        [token],
       );
 
       if (result.length === 0) {
         return res.status(404).json({ error: "Session not found" });
       }
-      const user = result[0];
-
-      // Remove the session from the user's sessions
-      const updatedSessions = { ...user.sessions };
-      delete updatedSessions[token];
-
-      // Update the user's sessions in the database
-      await query("UPDATE users SET sessions = $1 WHERE id = $2", [
-        updatedSessions,
-        user.id,
-      ]);
 
       res.json({ message: "Logged out successfully" });
     } catch (error) {

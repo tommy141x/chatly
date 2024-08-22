@@ -25,7 +25,12 @@ function initRoutes(app) {
           if (exists) {
             res.status(200).send(file);
           } else {
-            res.status(404).send("GET " + req.path + " with a 404");
+            const defaultFilePath = path.join(
+              process.cwd(),
+              `/pub${baseRoute}/${dirent.name}/default.png`,
+            );
+            const defaultFile = Bun.file(defaultFilePath);
+            res.status(200).send(defaultFile);
           }
         });
         console.log("Registered Pub Route: " + routePath);
