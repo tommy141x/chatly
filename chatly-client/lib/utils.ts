@@ -4,7 +4,7 @@ import { endpointState } from "@/lib/endpoint";
 import * as SecureStore from "expo-secure-store";
 import { Platform } from "react-native";
 // Determine if running within a Tauri app
-const isTauri = "__TAURI_METADATA__" in window;
+const isTauri = "__TAURI_INTERNALS__" in window;
 
 // Determine if running in a web environment (browser)
 export const isWeb = Platform.OS === "web" && !isTauri;
@@ -13,7 +13,7 @@ export const isWeb = Platform.OS === "web" && !isTauri;
 export const isMobile = !isWeb && !isTauri;
 
 // Determine if running on a desktop device
-export const isDesktop = !isMobile && !isWeb;
+export const isDesktop = isTauri;
 
 // Specific cases
 export const isTauriMobile = isTauri && isMobile; // Tauri app on mobile
@@ -79,8 +79,8 @@ export const logout = async () => {
       },
     });
     if (!response.ok) throw new Error("Network response was not ok");
-
     sessionState.reset();
+    console.log("Reset session", sessionState.get());
   } catch (error) {
     sessionState.reset();
     console.error("Logout error:", error);

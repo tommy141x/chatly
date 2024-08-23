@@ -4,6 +4,7 @@ import { router } from "expo-router";
 import { userState } from "@/lib/user";
 import { sessionState } from "@/lib/session";
 import { endpointState } from "@/lib/endpoint";
+import { validateUser } from "@/lib/utils";
 import { useDebouncedCallback } from "use-debounce";
 import { Card } from "@/components/ui/card";
 import { Divider } from "@/components/ui/divider";
@@ -30,25 +31,14 @@ function Login() {
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    const validateUser = async () => {
-      try {
-        const response = await fetch(`${endpoint.url}/api/auth/validate`, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
-        const user = await response.json();
-        if (user) {
-          userState.set(user);
-          router.replace("/");
-        }
-      } catch (error) {
-        console.error("User validation error:", error);
+    const load = async () => {
+      let userData = await validateUser();
+      if (userData) {
+        userState.set(userData);
+        router.replace("/");
       }
     };
-
-    validateUser();
+    load();
   }, []);
 
   const handleLogin = async () => {

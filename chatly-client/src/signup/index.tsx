@@ -18,6 +18,7 @@ import {
   FormControlErrorIcon,
   FormControlErrorText,
 } from "@/components/ui/form-control";
+import { validateUser } from "@/lib/utils";
 import { Heading } from "@/components/ui/heading";
 import { Text } from "@/components/ui/text";
 import { isMobile } from "@/lib/utils";
@@ -32,25 +33,14 @@ function SignUp() {
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    const validateUser = async () => {
-      try {
-        const response = await fetch(`${endpoint.url}/api/auth/validate`, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
-        const user = await response.json();
-        if (user) {
-          userState.set(user);
-          router.replace("/");
-        }
-      } catch (error) {
-        console.error("User validation error:", error);
+    const load = async () => {
+      let userData = await validateUser();
+      if (userData) {
+        userState.set(userData);
+        router.replace("/");
       }
     };
-
-    validateUser();
+    load();
   }, []);
 
   const handleSignUp = async () => {
