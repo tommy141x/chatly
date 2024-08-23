@@ -31,8 +31,8 @@ Chatly is an open-source social platform similar to Discord or Guilded, built us
 
 ## Setup Development Environment
 
-🔗 [Chatly Client Setup](/chatly-client)
-🔗 [Chatly Server Setup](/chatly-server)
+🔗 [Chatly Client Setup](/chatly-client/README.md)
+🔗 [Chatly Server Setup](/chatly-server/README.md)
 
 ## 🤝 Contributing
 We welcome contributions to Chatly! Please feel free to submit pull requests or open issues for bugs, feature requests, or improvements.
