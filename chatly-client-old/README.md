@@ -1,7 +1,4 @@
-## Development Environment Setup for Chatly Client
-
-### This is a react native version of the Chatly Client, using Expo & Tauri.
-#### I'm experimenting with this stack to see if it's a good fit for the project.
+## Development Environment Setup for Chatly Client (Old ReactJS/Vite Version)
 
 ### Prerequisites
 
@@ -21,7 +18,7 @@ curl -fsSL https://bun.sh/install | bash
 
 To contribute to the project, you'll first need to clone the repository:
 ```
-git clone https://github.com/tommy141x/chatly.git && cd chatly/chatly-client
+git clone https://github.com/tommy141x/chatly.git && cd chatly/chatly-client-old
 ```
 ## Install dependencies:
 
@@ -36,4 +33,4 @@ To start the Tauri application in development mode, run:
 bun run tauri dev
 ```
 
-You may have to run the command a few times if you encounter any errors.
+This will start a development server at ``http://localhost:1420`` and launch the Tauri application window.

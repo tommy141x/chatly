@@ -1,0 +1,53 @@
+{
+  "name": "chatly",
+  "private": true,
+  "version": "0.0.1",
+  "type": "module",
+  "scripts": {
+    "dev": "bunx --bun vite",
+    "build": "tsc && bunx --bun vite build",
+    "preview": "bunx --bun vite preview",
+    "tauri": "tauri"
+  },
+  "dependencies": {
+    "@jundao/zut": "^1.2.0",
+    "@mlc-ai/web-llm": "^0.2.61",
+    "@radix-ui/react-dialog": "^1.1.1",
+    "@radix-ui/react-dropdown-menu": "^2.1.1",
+    "@radix-ui/react-icons": "^1.3.0",
+    "@radix-ui/react-label": "^2.1.0",
+    "@radix-ui/react-menubar": "^1.1.1",
+    "@radix-ui/react-select": "^2.1.1",
+    "@radix-ui/react-slot": "^1.1.0",
+    "@radix-ui/react-tooltip": "^1.1.2",
+    "@tailwindcss/vite": "^4.0.0-alpha.19",
+    "@tauri-apps/api": "^2.0.0-rc.0",
+    "@tauri-apps/plugin-notification": "^2.0.0-rc.0",
+    "@tauri-apps/plugin-shell": "^2.0.0-rc.0",
+    "axios": "^1.7.4",
+    "class-variance-authority": "^0.7.0",
+    "clsx": "^2.1.1",
+    "debounce": "^2.1.0",
+    "framer-motion": "^11.3.28",
+    "livekit-client": "^2.5.0",
+    "lucide-react": "^0.427.0",
+    "rc-image": "^7.10.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "state-pool": "^0.10.1",
+    "tailwind-merge": "^2.5.2",
+    "tailwindcss": "^4.0.0-alpha.19",
+    "vaul": "^0.9.1",
+    "wouter": "^3.3.1"
+  },
+  "devDependencies": {
+    "@tauri-apps/cli": "^2.0.0-rc.3",
+    "@types/bun": "^1.1.6",
+    "@types/node": "^22.3.0",
+    "@types/react": "^18.2.15",
+    "@types/react-dom": "^18.2.7",
+    "@vitejs/plugin-react": "^4.3.1",
+    "typescript": "^5.2.2",
+    "vite": "^6.0.0-alpha.19"
+  }
+}
