@@ -17,15 +17,15 @@
 
 # Chatly
 
-Chatly is an open-source social platform similar to Discord or Guilded, built using Tauri, React/TypeScript, and Shadcn/UI.
+Chatly is an open-source social platform similar to Discord or Guilded, built using Tauri, React Native/TypeScript, and GlueStack UI.
 
 ## Tech Stack
 
-- 🐰 BunJS
+- 🐰 Bun
 - 🚀 Tauri
-- ⚛️ React
-- 🎨 Tailwind CSS
-- 🧰 Shadcn/UI
+- ⚛️ React Native
+- 🎨 Tailwind CSS (NativeWind)
+- 🧰 GlueStack UI
 - 🎙️ LiveKit.io
 - 🕙 Timescale
 
