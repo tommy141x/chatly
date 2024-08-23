@@ -7,40 +7,101 @@ import { Slot } from "expo-router";
 import { pingServer } from "@/lib/utils";
 import { endpointState, setInitialEndpointState } from "@/lib/endpoint";
 import * as SplashScreen from "expo-splash-screen";
+import { Easing } from "react-native-reanimated";
+import { Stack } from "@/components/stack";
+import {
+  useFonts,
+  Inter_100Thin,
+  Inter_200ExtraLight,
+  Inter_300Light,
+  Inter_400Regular,
+  Inter_500Medium,
+  Inter_600SemiBold,
+  Inter_700Bold,
+  Inter_800ExtraBold,
+  Inter_900Black,
+} from "@expo-google-fonts/inter";
 import "@/styles/global.css";
 
 export default function Layout() {
   const [appIsReady, setAppIsReady] = React.useState(false);
+  const [fontsLoaded] = useFonts({
+    Inter_100Thin,
+    Inter_200ExtraLight,
+    Inter_300Light,
+    Inter_400Regular,
+    Inter_500Medium,
+    Inter_600SemiBold,
+    Inter_700Bold,
+    Inter_800ExtraBold,
+    Inter_900Black,
+  });
+
+  const forFade = ({ current }) => ({
+    cardStyle: {
+      opacity: current.progress,
+    },
+  });
+
   React.useEffect(() => {
-    const fetchData = async () => {
+    async function prepare() {
       try {
         await setInitialEndpointState();
         const response = await pingServer();
         if (response) {
           endpointState.set(response);
         }
-        await SplashScreen.hideAsync();
-        setAppIsReady(true);
-      } catch (error) {
-        console.error("Error pinging server:", error);
-      }
-    };
 
-    fetchData();
+        // Wait for fonts to load
+        await SplashScreen.preventAutoHideAsync();
+      } catch (e) {
+        console.warn(e);
+      } finally {
+        setAppIsReady(true);
+      }
+    }
+
+    prepare();
   }, []);
 
-  if (!appIsReady) {
-    return null;
+  React.useEffect(() => {
+    if (appIsReady && fontsLoaded) {
+      SplashScreen.hideAsync();
+    }
+  }, [appIsReady, fontsLoaded]);
+
+  if (!appIsReady || !fontsLoaded) {
+    return null; // or a loading indicator
   }
 
   return (
     <GluestackUIProvider mode="dark">
       <View className="flex flex-col h-screen max-w-screen">
         <TitleBar />
-        <View className="flex-1 flex items-center justify-center bg-background-0">
-          <Slot />
-          <StatusBar style="auto" />
-        </View>
+        <Stack
+          screenOptions={{
+            headerShown: false,
+            animationEnabled: true,
+            cardStyleInterpolator: forFade,
+            transitionSpec: {
+              open: {
+                animation: "timing",
+                config: {
+                  duration: 200,
+                  easing: Easing.out(Easing.ease),
+                },
+              },
+              close: {
+                animation: "timing",
+                config: {
+                  duration: 200,
+                  easing: Easing.in(Easing.ease),
+                },
+              },
+            },
+          }}
+        />
+        <StatusBar style="auto" />
       </View>
     </GluestackUIProvider>
   );

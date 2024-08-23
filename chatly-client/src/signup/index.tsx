@@ -7,6 +7,7 @@ import { endpointState } from "@/lib/endpoint";
 import { useDebouncedCallback } from "use-debounce";
 import { Card } from "@/components/ui/card";
 import { Button, ButtonText, ButtonSpinner } from "@/components/ui/button";
+import { Divider } from "@/components/ui/divider";
 import { CircleUserRound, Mail, User, Lock } from "lucide-react-native";
 import { Input, InputField, InputSlot } from "@/components/ui/input";
 import {
@@ -77,129 +78,111 @@ function SignUp() {
     }
   };
 
-  const debouncedHandleSignUp = useDebouncedCallback(handleSignUp, 1000, {
+  const debouncedHandleSignUp = useDebouncedCallback(handleSignUp, 0, {
     maxWait: 2000,
   });
 
   return (
-    <Card
-      size="md"
-      variant="elevated"
-      className="bg-background-50 mb-5 w-[500px] rounded-xl p-10"
-    >
-      <Text className="text-sm font-medium mb-2">
-        {endpoint.name} - {endpoint.description}
-      </Text>
-      <Heading size="xl" className="mb-2">
-        Sign Up
-      </Heading>
-      <Text className={`${error ? "text-red-500" : "text-gray-500"}`}>
-        {error || "Enter your details below to create your account."}
-      </Text>
-
-      <FormControl
+    <View className="flex-1 flex items-center justify-center bg-background-0">
+      <Card
         size="md"
-        isInvalid={!!error}
-        isRequired={true}
-        className="mb-4"
+        variant="elevated"
+        className="bg-background-50 mb-5 w-[450px] rounded-3xl p-10"
       >
-        <FormControlLabel>
-          <FormControlLabelText>Email</FormControlLabelText>
-        </FormControlLabel>
-        <Input className="rounded-lg">
-          <InputSlot>
-            <Mail className="text-gray-400" />
-          </InputSlot>
-          <InputField
-            placeholder="myemail@example.com"
-            value={email}
-            onChangeText={setEmail}
-          />
-        </Input>
-      </FormControl>
+        <Text className="text-sm font-medium mb-2">
+          {endpoint.name} - {endpoint.description}
+        </Text>
+        <Heading size="xl" className="mb-2">
+          Sign Up
+        </Heading>
+        <Text className={`${error ? "text-red-500" : "text-gray-500"}`}>
+          {error || "Enter your details below to create your account."}
+        </Text>
 
-      <FormControl
-        size="md"
-        isInvalid={!!error}
-        isRequired={true}
-        className="mb-4"
-      >
-        <FormControlLabel>
-          <FormControlLabelText>Username</FormControlLabelText>
-        </FormControlLabel>
-        <Input className="rounded-lg">
-          <InputSlot>
-            <CircleUserRound className="text-gray-400" />
-          </InputSlot>
-          <InputField
-            placeholder="myusername"
-            value={username}
-            onChangeText={setUsername}
-          />
-        </Input>
-      </FormControl>
+        <FormControl size="md" isInvalid={!!error} className="my-4">
+          <FormControlLabel>
+            <FormControlLabelText>Email</FormControlLabelText>
+          </FormControlLabel>
+          <Input
+            className={`rounded-xl p-1 !border-2 ${
+              error ? "border-none !ring-2" : ""
+            }`}
+          >
+            <InputField
+              placeholder="myemail@example.com"
+              value={email}
+              onChangeText={setEmail}
+            />
+          </Input>
+        </FormControl>
 
-      <FormControl
-        size="md"
-        isInvalid={!!error}
-        isRequired={true}
-        className="mb-4"
-      >
-        <FormControlLabel>
-          <FormControlLabelText>Display Name</FormControlLabelText>
-        </FormControlLabel>
-        <Input className="rounded-lg">
-          <InputSlot>
-            <User className="text-gray-400" />
-          </InputSlot>
-          <InputField
-            placeholder="My Name"
-            value={displayName}
-            onChangeText={setDisplayName}
-          />
-        </Input>
-      </FormControl>
+        <FormControl size="md" isInvalid={!!error} className="mb-4">
+          <FormControlLabel>
+            <FormControlLabelText>Username</FormControlLabelText>
+          </FormControlLabel>
+          <Input
+            className={`rounded-xl p-1 !border-2 ${
+              error ? "border-none !ring-2" : ""
+            }`}
+          >
+            <InputField
+              placeholder="myusername"
+              value={username}
+              onChangeText={setUsername}
+            />
+          </Input>
+        </FormControl>
 
-      <FormControl
-        size="md"
-        isInvalid={!!error}
-        isRequired={true}
-        className="mb-4"
-      >
-        <FormControlLabel>
-          <FormControlLabelText>Password</FormControlLabelText>
-        </FormControlLabel>
-        <Input className="rounded-lg">
-          <InputSlot>
-            <Lock className="text-gray-400" />
-          </InputSlot>
-          <InputField
-            placeholder="Enter your password"
-            secureTextEntry
-            value={password}
-            onChangeText={setPassword}
-          />
-        </Input>
-        {error && (
-          <FormControlError>
-            <FormControlErrorIcon as={CircleUserRound} />
-            <FormControlErrorText>{error}</FormControlErrorText>
-          </FormControlError>
-        )}
-      </FormControl>
+        <FormControl size="md" isInvalid={!!error} className="mb-4">
+          <FormControlLabel>
+            <FormControlLabelText>Display Name</FormControlLabelText>
+          </FormControlLabel>
+          <Input
+            className={`rounded-xl p-1 !border-2 ${
+              error ? "border-none !ring-2" : ""
+            }`}
+          >
+            <InputField
+              placeholder="My Name"
+              value={displayName}
+              onChangeText={setDisplayName}
+            />
+          </Input>
+        </FormControl>
 
-      <Button onPress={debouncedHandleSignUp} className="rounded-lg mb-4">
-        {isLoading ? <ButtonSpinner /> : <ButtonText>Sign Up</ButtonText>}
-      </Button>
+        <FormControl size="md" isInvalid={!!error} className="mb-4">
+          <FormControlLabel>
+            <FormControlLabelText>Password</FormControlLabelText>
+          </FormControlLabel>
+          <Input
+            className={`rounded-xl p-1 !border-2 ${
+              error ? "border-none !ring-2" : ""
+            }`}
+          >
+            <InputField
+              placeholder="Enter your password"
+              secureTextEntry
+              value={password}
+              onChangeText={setPassword}
+            />
+          </Input>
+        </FormControl>
 
-      <Button
-        variant="outline"
-        onPress={() => router.push("/login")}
-        className="rounded-lg"
-      >
-        <ButtonText>Already have an account? Sign in</ButtonText>
-      </Button>
-    </Card>
+        <Button onPress={debouncedHandleSignUp} className="rounded-xl mb-4">
+          {isLoading ? <ButtonSpinner /> : <ButtonText>Sign Up</ButtonText>}
+        </Button>
+
+        <Divider className="my-4" />
+
+        <Button
+          variant="outline"
+          onPress={() => router.push("/login")}
+          className="rounded-xl"
+        >
+          <ButtonText>Already have an account? Sign in</ButtonText>
+        </Button>
+      </Card>
+    </View>
   );
 }
 

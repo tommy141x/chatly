@@ -76,86 +76,77 @@ function Login() {
     }
   };
 
-  const debouncedHandleLogin = useDebouncedCallback(handleLogin, 1000, {
+  const debouncedHandleLogin = useDebouncedCallback(handleLogin, 0, {
     maxWait: 2000,
   });
 
   return (
-    <Card
-      size="md"
-      variant="elevated"
-      className="bg-background-50 mb-5 w-[500px] rounded-xl p-10"
-    >
-      <Text className="text-sm font-medium mb-2">
-        {endpoint.name} - {endpoint.description}
-      </Text>
-      <Heading size="xl" className="mb-2">
-        Log In
-      </Heading>
-      <Text className={`${error ? "text-red-500" : "text-gray-500"}`}>
-        {error || "Enter your username or email, and password to log in."}
-      </Text>
-
-      <FormControl
+    <View className="flex-1 flex items-center justify-center bg-background-0">
+      <Card
         size="md"
-        isInvalid={!!error}
-        isRequired={true}
-        className="mb-4"
+        variant="elevated"
+        className="bg-background-50 mb-5 w-[450px] rounded-3xl p-10"
       >
-        <FormControlLabel>
-          <FormControlLabelText>Username or Email</FormControlLabelText>
-        </FormControlLabel>
-        <Input className="rounded-lg">
-          <InputSlot>
-            <CircleUserRound className="text-gray-400" />
-          </InputSlot>
-          <InputField
-            placeholder="myusername or myemail@example.com"
-            value={userInput}
-            onChangeText={setUserInput}
-          />
-        </Input>
-      </FormControl>
+        <Text className="text-sm font-medium mb-2">
+          {endpoint.name} - {endpoint.description}
+        </Text>
+        <Heading size="xl" className="mb-2">
+          Log In
+        </Heading>
+        <Text className={`${error ? "text-red-500" : "text-gray-500"}`}>
+          {error || "Enter your username or email, and password"}
+        </Text>
 
-      <FormControl
-        size="md"
-        isInvalid={!!error}
-        isRequired={true}
-        className="mb-4"
-      >
-        <FormControlLabel>
-          <FormControlLabelText>Password</FormControlLabelText>
-        </FormControlLabel>
-        <Input className="rounded-lg">
-          <InputField
-            placeholder="Enter your password"
-            secureTextEntry
-            value={password}
-            onChangeText={setPassword}
-          />
-        </Input>
-        {error && (
-          <FormControlError>
-            <FormControlErrorIcon as={CircleUserRound} />
-            <FormControlErrorText>{error}</FormControlErrorText>
-          </FormControlError>
-        )}
-      </FormControl>
+        <FormControl size="md" isInvalid={!!error} className="my-4">
+          <FormControlLabel>
+            <FormControlLabelText>Username or Email</FormControlLabelText>
+          </FormControlLabel>
+          <Input
+            className={`rounded-xl p-1 !border-2 ${
+              error ? "border-none !ring-2" : ""
+            }`}
+          >
+            <InputField
+              placeholder="myusername"
+              value={userInput}
+              onChangeText={setUserInput}
+            />
+          </Input>
+        </FormControl>
 
-      <Button onPress={debouncedHandleLogin} className="rounded-lg mb-4">
-        {isLoading ? <ButtonSpinner /> : <ButtonText>Log In</ButtonText>}
-      </Button>
+        <FormControl size="md" isInvalid={!!error} className="mb-4">
+          <FormControlLabel>
+            <FormControlLabelText>Password</FormControlLabelText>
+          </FormControlLabel>
+          <Input
+            className={`rounded-xl p-1 !border-2 ${
+              error ? "border-none !ring-2" : ""
+            }`}
+          >
+            <InputField
+              placeholder="mysecurepassword"
+              secureTextEntry
+              value={password}
+              onChangeText={setPassword}
+            />
+          </Input>
+        </FormControl>
 
-      <Divider className="my-4" />
+        <Button onPress={debouncedHandleLogin} className="rounded-xl mb-4">
+          {isLoading ? <ButtonSpinner /> : <ButtonText>Log In</ButtonText>}
+        </Button>
 
-      <Button
-        variant="outline"
-        onPress={() => router.replace("/signup")}
-        className="rounded-lg"
-      >
-        <ButtonText>Don't have an account? Sign up</ButtonText>
-      </Button>
-    </Card>
+        <Divider className="my-4" />
+
+        <Button
+          variant="outline"
+          onPress={() => router.replace("/signup")}
+          className="rounded-xl"
+        >
+          <ButtonText>Don't have an account? Sign up</ButtonText>
+        </Button>
+      </Card>
+    </View>
   );
 }
 
