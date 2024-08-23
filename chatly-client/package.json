@@ -44,6 +44,8 @@
     "@legendapp/motion": "^2.4.0",
     "@livekit/react-native": "^2.4.1",
     "@livekit/react-native-webrtc": "^125.0.3",
+    "@react-native-async-storage/async-storage": "1.23.1",
+    "@tauri-apps/api": "^2.0.0-rc.3",
     "@tauri-apps/cli": "^2.0.0-rc.7",
     "@types/react": "^18.3.4",
     "babel-plugin-module-resolver": "^5.0.2",
@@ -56,7 +58,6 @@
     "expo-linking": "~6.3.1",
     "expo-notifications": "~0.28.16",
     "expo-router": "~3.5.23",
-    "expo-secure-store": "~13.0.2",
     "expo-splash-screen": "~0.27.5",
     "expo-status-bar": "~1.12.1",
     "llama.rn": "^0.3.10",
@@ -74,7 +75,8 @@
     "react-ridge-state": "^4.2.9",
     "tailwindcss": "^3.4.10",
     "ts-node": "^10.9.2",
-    "typescript": "^5.5.4"
+    "typescript": "^5.5.4",
+    "use-debounce": "^10.0.3"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0"
