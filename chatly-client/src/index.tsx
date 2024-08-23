@@ -1,5 +1,4 @@
 import * as React from "react";
-import { StatusBar } from "expo-status-bar";
 import {
   AlertDialog,
   AlertDialogBackdrop,
@@ -12,7 +11,6 @@ import {
 import { Heading } from "@/components/ui/heading";
 import { Text } from "@/components/ui/text";
 import { Button, ButtonText } from "@/components/ui/button";
-import { GluestackUIProvider } from "@/components/ui/gluestack-ui-provider";
 import { TitleBar } from "@/components/titlebar";
 import { View } from "react-native";
 import { userState } from "@/lib/user";
@@ -62,7 +60,6 @@ export default function App() {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
-      <StatusBar style="auto" />
     </View>
   );
 }

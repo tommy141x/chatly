@@ -2,19 +2,27 @@ import { setTitleBar } from "@/components/titlebar";
 import { sessionState } from "@/lib/session";
 import { endpointState } from "@/lib/endpoint";
 import * as SecureStore from "expo-secure-store";
+import { Platform } from "react-native";
+// Determine if running within a Tauri app
+const isTauri = "__TAURI_METADATA__" in window;
 
-const isTauri = "__TAURI_INTERNALS__" in window;
-export default isTauri; // running on a desktop app or a mobile app - but not in the browser
-export const isWeb = !isTauri; // running on the browser on either desktop or mobile - but not as a tauri app
+// Determine if running in a web environment (browser)
+export const isWeb = Platform.OS === "web" && !isTauri;
 
-export const isMobile = navigator.maxTouchPoints > 0; // running in mobile either in the browser or as a tauri app
-export const isDesktop = !isMobile; // running in desktop either in the browser or as a tauri app
+// Determine if running on a mobile device
+export const isMobile = !isWeb && !isTauri;
 
-export const isTauriMobile = isTauri && isMobile; // running on mobile as a tauri app - but not on the browser
-export const isTauriDesktop = isTauri && isDesktop; // running on desktop as a tauri app - but not on the browser
+// Determine if running on a desktop device
+export const isDesktop = !isMobile && !isWeb;
 
-export const isWebMobile = isWeb && isMobile; // running on mobile in the browser - but not as a tauri app
-export const isWebDesktop = isWeb && isDesktop; // running on desktop in the browser - but not as a tauri app
+// Specific cases
+export const isTauriMobile = isTauri && isMobile; // Tauri app on mobile
+export const isTauriDesktop = isTauri && isDesktop; // Tauri app on desktop
+
+export const isWebMobile = isWeb && isMobile; // Browser on mobile
+export const isWebDesktop = isWeb && isDesktop; // Browser on desktop
+
+export default isTauri; // True if running in a Tauri app
 
 export const pingServer = async () => {
   let endpoint = endpointState.get();

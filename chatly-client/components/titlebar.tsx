@@ -3,7 +3,7 @@ import { View } from "react-native";
 import { Minus, X, Square } from "lucide-react-native";
 import { Pressable } from "@/components/ui/pressable";
 import { getCurrentWindow } from "@tauri-apps/api/window";
-import { isTauriDesktop } from "@/lib/utils";
+import { isDesktop } from "@/lib/utils";
 
 let titleBarComponents = [];
 let setTitleBarComponentsState = null;
@@ -26,12 +26,12 @@ function TitleBar() {
   const titleBarRef = useRef(null);
 
   let appWindow;
-  if (isTauriDesktop) {
+  if (isDesktop) {
     appWindow = getCurrentWindow();
   }
 
   useEffect(() => {
-    if (titleBarRef.current && isTauriDesktop) {
+    if (titleBarRef.current && isDesktop) {
       titleBarRef.current.setAttribute("data-tauri-drag-region", "");
     }
   }, []);
@@ -44,7 +44,7 @@ function TitleBar() {
     <View
       ref={titleBarRef}
       className={`sticky top-0 z-50 h-9 w-full flex flex-row justify-between ${
-        isTauriDesktop ? "bg-background-50" : "bg-background-0"
+        isDesktop ? "bg-background-50" : "bg-background-0"
       }`}
     >
       <View className="flex items-center">
@@ -52,7 +52,7 @@ function TitleBar() {
           <React.Fragment key={index}>{Component}</React.Fragment>
         ))}
       </View>
-      {isTauriDesktop && (
+      {isDesktop && (
         <View className="flex flex-row pointer-events-auto">
           <Pressable
             variant="primary"

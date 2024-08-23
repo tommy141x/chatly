@@ -1,4 +1,3 @@
-// components/JsStack.tsx
 import { ParamListBase, StackNavigationState } from "@react-navigation/native";
 import {
   createStackNavigator,

@@ -3,10 +3,10 @@ import { StatusBar } from "expo-status-bar";
 import { GluestackUIProvider } from "@/components/ui/gluestack-ui-provider";
 import { TitleBar } from "@/components/titlebar";
 import { View } from "react-native";
-import { Slot } from "expo-router";
 import { pingServer } from "@/lib/utils";
 import { endpointState, setInitialEndpointState } from "@/lib/endpoint";
 import * as SplashScreen from "expo-splash-screen";
+import Splash from "@/components/splash-web";
 import { Easing } from "react-native-reanimated";
 import { Stack } from "@/components/stack";
 import {
@@ -22,6 +22,8 @@ import {
   Inter_900Black,
 } from "@expo-google-fonts/inter";
 import "@/styles/global.css";
+
+SplashScreen.preventAutoHideAsync();
 
 export default function Layout() {
   const [appIsReady, setAppIsReady] = React.useState(false);
@@ -51,9 +53,6 @@ export default function Layout() {
         if (response) {
           endpointState.set(response);
         }
-
-        // Wait for fonts to load
-        await SplashScreen.preventAutoHideAsync();
       } catch (e) {
         console.warn(e);
       } finally {
@@ -71,7 +70,15 @@ export default function Layout() {
   }, [appIsReady, fontsLoaded]);
 
   if (!appIsReady || !fontsLoaded) {
-    return null; // or a loading indicator
+    return (
+      <GluestackUIProvider mode="dark">
+        <View className="flex flex-col h-screen max-w-screen">
+          <TitleBar />
+          <Splash />
+          <StatusBar style="auto" />
+        </View>
+      </GluestackUIProvider>
+    );
   }
 
   return (

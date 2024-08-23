@@ -10,6 +10,7 @@ import { Divider } from "@/components/ui/divider";
 import { Button, ButtonText, ButtonSpinner } from "@/components/ui/button";
 import { CircleUserRound } from "lucide-react-native";
 import { Input, InputField, InputSlot } from "@/components/ui/input";
+import { isMobile } from "@/lib/utils";
 import {
   FormControl,
   FormControlLabel,
@@ -85,12 +86,16 @@ function Login() {
       <Card
         size="md"
         variant="elevated"
-        className="bg-background-50 mb-5 w-[450px] rounded-3xl p-10"
+        className={`mb-5 rounded-3xl p-10 ${
+          isMobile ? "w-full" : "bg-background-50 w-[450px]"
+        }`}
       >
-        <Text className="text-sm font-medium mb-2">
+        <Text
+          className={`${isMobile ? "text-lg" : "text-sm"} font-medium mb-2`}
+        >
           {endpoint.name} - {endpoint.description}
         </Text>
-        <Heading size="xl" className="mb-2">
+        <Heading size={`${isMobile ? "3xl" : "xl"}`} className="mb-2">
           Log In
         </Heading>
         <Text className={`${error ? "text-red-500" : "text-gray-500"}`}>
