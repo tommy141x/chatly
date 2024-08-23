@@ -31,9 +31,7 @@ bun install
 ```
 ## Run the development client:
 
-To start the Tauri application in development mode, run:
+To start the application in development mode, run:
 ```
-bun run tauri dev
+bunx expo start
 ```
-
-You may have to run the command a few times if you encounter any errors.
