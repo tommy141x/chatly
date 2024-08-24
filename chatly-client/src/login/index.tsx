@@ -96,7 +96,7 @@ function Login() {
           <FormControlLabel>
             <FormControlLabelText>Username or Email</FormControlLabelText>
           </FormControlLabel>
-          <Input
+          {/*<Input
             className={`rounded-xl p-1 !border-2 ${
               error ? "border-none !ring-2" : ""
             }`}
@@ -105,15 +105,15 @@ function Login() {
               placeholder="myusername"
               value={userInput}
               onChangeText={setUserInput}
-            />
-          </Input>
+              />
+          </Input>*/}
         </FormControl>
 
         <FormControl size="md" isInvalid={!!error} className="mb-4">
           <FormControlLabel>
             <FormControlLabelText>Password</FormControlLabelText>
           </FormControlLabel>
-          <Input
+          {/*<Input
             className={`rounded-xl p-1 !border-2 ${
               error ? "border-none !ring-2" : ""
             }`}
@@ -123,8 +123,8 @@ function Login() {
               secureTextEntry
               value={password}
               onChangeText={setPassword}
-            />
-          </Input>
+              />
+          </Input>*/}
         </FormControl>
 
         <Button onPress={debouncedHandleLogin} className="rounded-xl mb-4">
