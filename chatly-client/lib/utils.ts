@@ -115,3 +115,19 @@ export const getDeviceInfo = async () => {
 
   return deviceInfo;
 };
+
+export const fetchPlugins = async () => {
+  let endpoint = endpointState.get();
+  let session = sessionState.get();
+
+  try {
+    const response = await fetch(`${endpoint.url}/api/plugins`, {
+      headers: {
+        Authorization: `Bearer ${session || ""}`,
+        "Content-Type": "application/json",
+      },
+    });
+    if (!response.ok) throw new Error("Network response was not ok");
+    //load plugins
+  } catch (error) {}
+};

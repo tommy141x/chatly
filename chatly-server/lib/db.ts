@@ -54,6 +54,17 @@ async function initDB() {
     );
   `;
   await sql`
+    CREATE TABLE IF NOT EXISTS subscriptions (
+      id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+      user_id UUID REFERENCES users(id),
+      customer_id VARCHAR(255),
+      start_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+      cancel_at_period_end BOOLEAN,
+      status VARCHAR(255),
+      stripe_sub JSONB
+    );
+  `;
+  await sql`
     CREATE TABLE IF NOT EXISTS user_relationships (
         id SERIAL PRIMARY KEY,
         follower_id UUID REFERENCES users(id),

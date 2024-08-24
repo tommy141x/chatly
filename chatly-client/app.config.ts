@@ -1,6 +1,16 @@
 import { ExpoConfig, ConfigContext } from "expo/config";
-export default ({ config }: ConfigContext): ExpoConfig => ({
+
+// 🌐 Server API endpoint
+const SERVER_API_ENDPOINT = "http://localhost:3000";
+
+// 🔌 Socket server endpoint
+const SOCKET_SERVER_ENDPOINT = "http://localhost:8000";
+
+// 📝 Expo configuration (Don't need to change)
+const expoConfig = ({ config }: ConfigContext): ExpoConfig => ({
   ...config,
-  endpoint: "http://localhost:3000",
-  socket: "http://localhost:3000",
+  endpoint: SERVER_API_ENDPOINT,
+  socket: SOCKET_SERVER_ENDPOINT,
 });
+
+export default expoConfig;
