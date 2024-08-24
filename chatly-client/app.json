@@ -6,7 +6,12 @@
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "dark",
-    "plugins": ["expo-router", "expo-video"],
+    "plugins": [
+      "expo-router",
+      "expo-video",
+      "@config-plugins/react-native-webrtc",
+      "@livekit/react-native-expo-plugin"
+    ],
     "scheme": "chatly-scheme",
     "ios": {
       "supportsTablet": true,
