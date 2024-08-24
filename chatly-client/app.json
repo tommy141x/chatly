@@ -6,7 +6,7 @@
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "dark",
-    "plugins": ["expo-router"],
+    "plugins": ["expo-router", "expo-video"],
     "scheme": "chatly-scheme",
     "ios": {
       "supportsTablet": true,
