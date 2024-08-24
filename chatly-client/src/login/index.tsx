@@ -71,6 +71,10 @@ function Login() {
     maxWait: 2000,
   });
 
+  /*const inputClassName = `rounded-xl p-1 !border-2 ${
+    error ? "border-none !ring-2" : ""
+  }`;*/
+
   return (
     <View className="flex-1 flex items-center justify-center bg-background-0">
       <Card
@@ -96,35 +100,27 @@ function Login() {
           <FormControlLabel>
             <FormControlLabelText>Username or Email</FormControlLabelText>
           </FormControlLabel>
-          {/*<Input
-            className={`rounded-xl p-1 !border-2 ${
-              error ? "border-none !ring-2" : ""
-            }`}
-          >
+          <Input className="rounded-xl p-1 !border-2 !ring-2">
             <InputField
               placeholder="myusername"
               value={userInput}
               onChangeText={setUserInput}
-              />
-          </Input>*/}
+            />
+          </Input>
         </FormControl>
 
         <FormControl size="md" isInvalid={!!error} className="mb-4">
           <FormControlLabel>
             <FormControlLabelText>Password</FormControlLabelText>
           </FormControlLabel>
-          {/*<Input
-            className={`rounded-xl p-1 !border-2 ${
-              error ? "border-none !ring-2" : ""
-            }`}
-          >
+          <Input className="rounded-xl p-1 !border-2 !ring-2">
             <InputField
               placeholder="mysecurepassword"
               secureTextEntry
               value={password}
               onChangeText={setPassword}
-              />
-          </Input>*/}
+            />
+          </Input>
         </FormControl>
 
         <Button onPress={debouncedHandleLogin} className="rounded-xl mb-4">

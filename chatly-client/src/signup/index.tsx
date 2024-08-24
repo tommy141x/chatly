@@ -98,11 +98,7 @@ function SignUp() {
           <FormControlLabel>
             <FormControlLabelText>Email</FormControlLabelText>
           </FormControlLabel>
-          <Input
-            className={`rounded-xl p-1 !border-2 ${
-              error ? "border-none !ring-2" : ""
-            }`}
-          >
+          <Input className="rounded-xl p-1 !border-2 !ring-2">
             <InputField
               placeholder="myemail@example.com"
               value={email}
@@ -115,11 +111,7 @@ function SignUp() {
           <FormControlLabel>
             <FormControlLabelText>Username</FormControlLabelText>
           </FormControlLabel>
-          <Input
-            className={`rounded-xl p-1 !border-2 ${
-              error ? "border-none !ring-2" : ""
-            }`}
-          >
+          <Input className="rounded-xl p-1 !border-2 !ring-2">
             <InputField
               placeholder="myusername"
               value={username}
@@ -132,11 +124,7 @@ function SignUp() {
           <FormControlLabel>
             <FormControlLabelText>Display Name</FormControlLabelText>
           </FormControlLabel>
-          <Input
-            className={`rounded-xl p-1 !border-2 ${
-              error ? "border-none !ring-2" : ""
-            }`}
-          >
+          <Input className="rounded-xl p-1 !border-2 !ring-2">
             <InputField
               placeholder="My Name"
               value={displayName}
@@ -149,11 +137,7 @@ function SignUp() {
           <FormControlLabel>
             <FormControlLabelText>Password</FormControlLabelText>
           </FormControlLabel>
-          <Input
-            className={`rounded-xl p-1 !border-2 ${
-              error ? "border-none !ring-2" : ""
-            }`}
-          >
+          <Input className="rounded-xl p-1 !border-2 !ring-2">
             <InputField
               placeholder="Enter your password"
               secureTextEntry
