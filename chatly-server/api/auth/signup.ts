@@ -3,24 +3,21 @@ import { query } from "@/lib/db";
 
 export default function handler(app, route) {
   app.post(route, async (req, res) => {
-    const { username, displayName, password, email } = req.body;
-    if (!username || !displayName || !password || !email) {
+    const { username, displayName, password, device } = req.body;
+    if (!displayName || !username || !password || !device) {
       return res.status(400).json({
-        error: "Username, display name, password, and email are required",
+        error: "Username, display name, device, and password are required",
       });
     }
     try {
       // Check if the username or email already exists
       const [existingUser] = await query(
-        "SELECT * FROM users WHERE username = $1 OR email = $2",
-        [username, email],
+        "SELECT * FROM users WHERE username = $1",
+        [username],
       );
       if (existingUser) {
         if (existingUser.username === username) {
           return res.status(409).json({ error: "Username already exists" });
-        }
-        if (existingUser.email === email) {
-          return res.status(409).json({ error: "Email already exists" });
         }
       }
 
@@ -28,14 +25,14 @@ export default function handler(app, route) {
 
       // Insert the new user into the database and return the id
       const [newUser] = await query(
-        "INSERT INTO users (display_name, username, email, password) VALUES ($1, $2, $3, $4) RETURNING id",
-        [displayName, username, email, hashedPassword],
+        "INSERT INTO users (display_name, username, password) VALUES ($1, $2, $3) RETURNING id",
+        [displayName, username, hashedPassword],
       );
 
       // Create a new session for the user
       const [session] = await query(
-        "INSERT INTO sessions (user_id) VALUES ($1) RETURNING id",
-        [newUser.id],
+        "INSERT INTO sessions (user_id, device) VALUES ($1, $2) RETURNING id",
+        [newUser.id, device],
       );
 
       res.status(201).json({

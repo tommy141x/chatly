@@ -35,7 +35,6 @@ async function initDB() {
         status VARCHAR(255),
         activity_status JSONB,
         username VARCHAR(255) UNIQUE NOT NULL,
-        email VARCHAR(255) UNIQUE NOT NULL,
         password VARCHAR(255) NOT NULL,
         connections JSONB,
         message_settings JSONB,
@@ -49,6 +48,8 @@ async function initDB() {
     CREATE TABLE IF NOT EXISTS sessions (
       id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
       user_id UUID REFERENCES users(id),
+      device JSONB,
+      last_active TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
       expires_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP + INTERVAL '7 days'
     );
   `;

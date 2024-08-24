@@ -2,11 +2,7 @@ import { query } from "@/lib/db";
 
 const TIMEOUT_MS = 5000; // Timeout duration in milliseconds
 
-export const validateUser = async (headers: {
-  [key: string]: string;
-}): Promise<
-  false | { id: string; username: string; email: string; display_name: string }
-> => {
+export const validateUser = async (headers) => {
   try {
     // Extract the token from the Authorization header
     const authHeader = headers["authorization"];
@@ -18,16 +14,14 @@ export const validateUser = async (headers: {
       return false;
     }
 
-    // Create a timeout promise
     const timeoutPromise = new Promise((_, reject) =>
       setTimeout(() => reject(new Error("Request timed out")), TIMEOUT_MS),
     );
 
-    // Fetch session and user data with timeout
     const result = await Promise.race([
       query(
         `
-        SELECT u.id, u.username, u.email, u.display_name
+        SELECT u.*
         FROM sessions s
         JOIN users u ON s.user_id = u.id
         WHERE s.id = $1 AND s.expires_at > CURRENT_TIMESTAMP
@@ -43,8 +37,21 @@ export const validateUser = async (headers: {
       return false;
     }
 
-    // Return the user data
-    return result[0];
+    // Update the last_active field for the session
+    await query(
+      `
+      UPDATE sessions
+      SET last_active = CURRENT_TIMESTAMP
+      WHERE id = $1
+    `,
+      [token],
+    );
+
+    // Remove the password field from the user object
+    const user = result[0];
+    delete user.password;
+
+    return user;
   } catch (error) {
     console.error("Error validating session token:", error);
     return false;
