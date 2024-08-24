@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import * as React from "react";
 import { View } from "react-native";
 import { router } from "expo-router";
 import { userState } from "@/lib/user";
@@ -25,14 +25,14 @@ import { isMobile } from "@/lib/utils";
 
 function SignUp() {
   const [endpoint, setEndpoint] = endpointState.use();
-  const [error, setError] = useState("");
-  const [username, setUsername] = useState("");
-  const [displayName, setDisplayName] = useState("");
-  const [password, setPassword] = useState("");
-  const [email, setEmail] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = React.useState("");
+  const [username, setUsername] = React.useState("");
+  const [displayName, setDisplayName] = React.useState("");
+  const [password, setPassword] = React.useState("");
+  const [email, setEmail] = React.useState("");
+  const [isLoading, setIsLoading] = React.useState(false);
 
-  useEffect(() => {
+  React.useEffect(() => {
     const load = async () => {
       let userData = await validateUser();
       if (userData) {

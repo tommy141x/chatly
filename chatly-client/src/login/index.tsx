@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import * as React from "react";
 import { View } from "react-native";
 import { router } from "expo-router";
 import { userState } from "@/lib/user";
@@ -25,12 +25,12 @@ import { Text } from "@/components/ui/text";
 
 function Login() {
   const [endpoint, setEndpoint] = endpointState.use();
-  const [error, setError] = useState("");
-  const [userInput, setUserInput] = useState("");
-  const [password, setPassword] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = React.useState("");
+  const [userInput, setUserInput] = React.useState("");
+  const [password, setPassword] = React.useState("");
+  const [isLoading, setIsLoading] = React.useState(false);
 
-  useEffect(() => {
+  React.useEffect(() => {
     const load = async () => {
       let userData = await validateUser();
       if (userData) {
