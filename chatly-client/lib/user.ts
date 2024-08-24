@@ -7,7 +7,6 @@ interface User {
   status?: string;
   activity_status?: Record<string, any>;
   username: string;
-  email: string;
   connections?: Record<string, any>;
   message_settings?: Record<string, any>;
   notifications?: Record<string, any>;

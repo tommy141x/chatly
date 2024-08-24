@@ -21,7 +21,7 @@ import {
 import { validateUser } from "@/lib/utils";
 import { Heading } from "@/components/ui/heading";
 import { Text } from "@/components/ui/text";
-import { isMobile } from "@/lib/utils";
+import { isMobile, getDeviceInfo } from "@/lib/utils";
 
 function SignUp() {
   const [endpoint, setEndpoint] = endpointState.use();
@@ -29,7 +29,6 @@ function SignUp() {
   const [username, setUsername] = React.useState("");
   const [displayName, setDisplayName] = React.useState("");
   const [password, setPassword] = React.useState("");
-  const [email, setEmail] = React.useState("");
   const [isLoading, setIsLoading] = React.useState(false);
 
   React.useEffect(() => {
@@ -47,12 +46,13 @@ function SignUp() {
     setIsLoading(true);
     setError("");
     try {
+      const device = await getDeviceInfo();
       const response = await fetch(`${endpoint.url}/api/auth/signup`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ username, displayName, password, email }),
+        body: JSON.stringify({ displayName, username, password, device }),
       });
       const data = await response.json();
       if (response.ok) {
@@ -62,7 +62,7 @@ function SignUp() {
         setError(data.error || "Signup failed");
       }
     } catch (error) {
-      console.error("Signup error:", error);
+      //console.error("Signup error:", error);
       setError("An error occurred during signup");
     } finally {
       setIsLoading(false);
@@ -94,15 +94,15 @@ function SignUp() {
           {error || "Enter your details below to create your account."}
         </Text>
 
-        <FormControl size="md" isInvalid={!!error} className="my-4">
+        <FormControl size="md" isInvalid={!!error} className="mb-4">
           <FormControlLabel>
-            <FormControlLabelText>Email</FormControlLabelText>
+            <FormControlLabelText>Display Name</FormControlLabelText>
           </FormControlLabel>
           <Input className="rounded-xl p-1 !border-2 !ring-2">
             <InputField
-              placeholder="myemail@example.com"
-              value={email}
-              onChangeText={setEmail}
+              placeholder="My Name"
+              value={displayName}
+              onChangeText={setDisplayName}
             />
           </Input>
         </FormControl>
@@ -116,19 +116,6 @@ function SignUp() {
               placeholder="myusername"
               value={username}
               onChangeText={setUsername}
-            />
-          </Input>
-        </FormControl>
-
-        <FormControl size="md" isInvalid={!!error} className="mb-4">
-          <FormControlLabel>
-            <FormControlLabelText>Display Name</FormControlLabelText>
-          </FormControlLabel>
-          <Input className="rounded-xl p-1 !border-2 !ring-2">
-            <InputField
-              placeholder="My Name"
-              value={displayName}
-              onChangeText={setDisplayName}
             />
           </Input>
         </FormControl>

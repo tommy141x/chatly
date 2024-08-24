@@ -1,11 +1,14 @@
 import React, { useState } from "react";
-import { View } from "react-native";
+import { View, ScrollView } from "react-native";
 import { Grid, GridItem } from "@/components/ui/grid";
+import { Text } from "@/components/ui/text";
 import { logout } from "@/lib/utils";
+import { userState } from "@/lib/user";
 import { Button, ButtonText, ButtonSpinner } from "@/components/ui/button";
 import { router } from "expo-router";
 
 export default function Server() {
+  const [user, setUser] = userState.use();
   const [isLoggingOut, setIsLoggingOut] = useState(false);
 
   const handleLogout = async () => {
@@ -41,6 +44,8 @@ export default function Server() {
             className: "col-span-3",
           }}
         >
+          <Text>Welcome {user?.display_name}</Text>
+
           <Button
             onPress={handleLogout}
             variant="outline"

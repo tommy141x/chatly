@@ -9,13 +9,11 @@ import { endpointState } from "@/lib/endpoint";
 import { Button, ButtonText } from "@/components/ui/button";
 import { Pressable } from "@/components/ui/pressable";
 import {
-  AlertDialog,
-  AlertDialogBackdrop,
-  AlertDialogContent,
-  AlertDialogHeader,
-  AlertDialogBody,
-  AlertDialogFooter,
-} from "@/components/ui/alert-dialog";
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+} from "@/components/dialog";
 import {
   FormControl,
   FormControlLabel,
@@ -76,18 +74,17 @@ export default function SideBar() {
         <HousePlus className="h-7 w-7 text-primary" />
       </Button>
 
-      <AlertDialog
+      <Dialog
         isOpen={showAlertDialog}
         onClose={() => setShowAlertDialog(false)}
       >
-        <AlertDialogBackdrop />
-        <AlertDialogContent>
-          <AlertDialogHeader>
+        <DialogContent>
+          <DialogHeader>
             <Heading size="lg" className="text-typography-950 font-semibold">
               Create a New Server
             </Heading>
-          </AlertDialogHeader>
-          <AlertDialogBody>
+          </DialogHeader>
+          <DialogContent>
             <ScrollView>
               <FormControl size="md" className="my-4">
                 <FormControlLabel>
@@ -115,8 +112,8 @@ export default function SideBar() {
                 </Input>
               </FormControl>
             </ScrollView>
-          </AlertDialogBody>
-          <AlertDialogFooter>
+          </DialogContent>
+          <DialogFooter>
             <Button
               variant="outline"
               action="secondary"
@@ -128,9 +125,9 @@ export default function SideBar() {
             <Button size="sm" onPress={createServer}>
               <ButtonText>Create Server</ButtonText>
             </Button>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </View>
   );
 }

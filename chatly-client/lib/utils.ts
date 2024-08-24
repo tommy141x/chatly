@@ -3,6 +3,9 @@ import { sessionState } from "@/lib/session";
 import { endpointState } from "@/lib/endpoint";
 import * as SecureStore from "expo-secure-store";
 import { Platform } from "react-native";
+import * as Device from "expo-device";
+import * as Network from "expo-network";
+import * as Cellular from "expo-cellular";
 // Determine if running within a Tauri app
 const isTauri = "__TAURI_INTERNALS__" in window;
 
@@ -36,7 +39,7 @@ export const pingServer = async () => {
       description: data.server_description,
     };
   } catch (error) {
-    console.error("Failed to ping server:", error);
+    //console.error("Failed to ping server:", error);
     return false;
   }
 };
@@ -62,7 +65,7 @@ export const validateUser = async () => {
     }
   } catch (error) {
     setTitleBar();
-    console.error("Fetch error:", error.message);
+    //console.error("Fetch error:", error.message);
     return false;
   }
 };
@@ -78,11 +81,37 @@ export const logout = async () => {
         Authorization: `Bearer ${session || ""}`,
       },
     });
-    if (!response.ok) throw new Error("Network response was not ok");
+    //if (!response.ok) throw new Error("Network response was not ok");
     sessionState.reset();
-    console.log("Reset session", sessionState.get());
+    //console.log("Reset session", sessionState.get());
   } catch (error) {
     sessionState.reset();
-    console.error("Logout error:", error);
+    //console.error("Logout error:", error);
   }
+};
+
+export const getDeviceInfo = async () => {
+  let deviceInfo = {};
+
+  deviceInfo.ipAddr = (await Network.getIpAddressAsync()) || false;
+  deviceInfo.state = (await Network.getNetworkStateAsync()) || false;
+  deviceInfo.brand = Device.brand || false;
+  deviceInfo.name = Device.deviceName || false;
+  deviceInfo.model = Device.modelName || false;
+
+  // TODO: Detect macOS
+  deviceInfo.osName = Device.osName || false;
+
+  deviceInfo.osVersion = Device.osVersion || false;
+
+  const allowsVoip = await Cellular.allowsVoipAsync();
+  deviceInfo.allowsVoip =
+    allowsVoip !== null ? allowsVoip : isDesktop ? true : false;
+
+  deviceInfo.isWeb = isWeb || false;
+  deviceInfo.isMobile = isMobile || false;
+  deviceInfo.isDesktop = isDesktop || false;
+  deviceInfo.isTauri = isTauri || false;
+
+  return deviceInfo;
 };
