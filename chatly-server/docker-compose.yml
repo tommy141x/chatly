@@ -42,7 +42,7 @@ services:
     volumes:
       - .:/app
     working_dir: /app
-    command: bun index.ts
+    command: bun --watch index.ts
     ports:
       - "3000:3000"
     depends_on:

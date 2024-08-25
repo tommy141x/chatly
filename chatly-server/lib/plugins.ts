@@ -8,7 +8,7 @@ let endpoint =
     : "https://api.example.com") + "/api/plugins";
 const pluginsDir = "./plugins";
 
-export const initPlugins = async () => {
+const initPlugins = async () => {
   const requestedPlugins = process.env.PLUGINS?.split("|") || [];
   let licenseKey = process.env.LICENSE_KEY;
   if (!licenseKey) {
@@ -135,12 +135,12 @@ const removeRefs = async () => {
     } else {
       console.error("Endpoint is not online");
     }
-  } catch (error) {
-    console.error("Error removing refs:", error);
-  }
+  } catch (error) {}
 };
 
 // Handle process signals
 process.on("SIGINT", removeRefs);
 process.on("SIGTERM", removeRefs);
 process.on("exit", removeRefs);
+
+export default initPlugins;
