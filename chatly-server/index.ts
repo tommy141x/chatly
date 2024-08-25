@@ -1,12 +1,14 @@
 import { initDB, softWipeDB, wipeDB } from "@/lib/db";
 import server from "bunrest";
 import initRoutes from "@/lib/router";
+import initPlugins from "@/lib/plugins";
 
 const app = server();
 
 //await softWipeDB();
 await wipeDB();
 await initDB();
+await initPlugins();
 initRoutes(app);
 
 app.listen(process.env.PORT, () => {
