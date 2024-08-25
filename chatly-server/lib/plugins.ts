@@ -2,6 +2,7 @@ import { $, file } from "bun";
 import { mkdir, writeFile, readdir, rm, readFile } from "fs/promises";
 import { join, dirname } from "path";
 import { query } from "@/lib/db";
+import { validateUser } from "@/lib/utils";
 
 let endpoint =
   (process.env.DEV_MODE == "true"
@@ -146,7 +147,7 @@ async function runPlugins(requestedPlugins, app) {
       try {
         const plugin = await import(serverFile);
         if (typeof plugin.default === "function") {
-          await plugin.default(app, query);
+          await plugin.default(app, query, validateUser);
         }
       } catch (error) {
         console.error(`Error starting plugin ${dir}:`, error);
