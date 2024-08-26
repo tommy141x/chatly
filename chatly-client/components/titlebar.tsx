@@ -43,8 +43,8 @@ function TitleBar() {
   return (
     <View
       ref={titleBarRef}
-      className={`sticky top-0 z-50 h-9 w-full flex flex-row justify-between ${
-        isDesktop ? "bg-background-50" : "bg-background-0"
+      className={`sticky top-0 h-9 w-full flex flex-row justify-between ${
+        isDesktop ? "bg-background-50 z-[99999]" : "bg-background-0"
       }`}
     >
       <View className="flex items-center">
