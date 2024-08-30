@@ -10,7 +10,7 @@ const app = server();
 initRoutes(app);
 
 app.listen(process.env.PORT, () => {
-  console.log("Listening on port " + process.env.PORT);
+  console.log("API is running");
 });
 
 app.ws<{ str: string }>(

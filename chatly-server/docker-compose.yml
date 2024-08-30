@@ -2,9 +2,9 @@ services:
   livekit:
     image: livekit/livekit-server:latest
     ports:
-      - "7880:7880"
-      - "7881:7881"
-      - "7882:7882/udp"
+      - "${WS_PORT}:7880"
+      - "${ICE_TCP}:7881"
+      - "${ICE_UDP}:7882/udp"
     command: --dev --config /livekit.yaml
     volumes:
       - ./livekit.yaml:/livekit.yaml
@@ -44,7 +44,7 @@ services:
     working_dir: /app
     command: bun --watch index.ts
     ports:
-      - "3000:3000"
+      - "${PORT}:3000"
     depends_on:
       timescaledb:
         condition: service_healthy
