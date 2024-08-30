@@ -4,7 +4,7 @@ import { ExpoConfig, ConfigContext } from "expo/config";
 const SERVER_API_ENDPOINT = "http://localhost:3000";
 
 // 🔌 Socket server endpoint
-const SOCKET_SERVER_ENDPOINT = "http://localhost:8000";
+const SOCKET_SERVER_ENDPOINT = "http://localhost:7880";
 
 // 📝 Expo configuration (Don't need to change)
 const expoConfig = ({ config }: ConfigContext): ExpoConfig => ({
