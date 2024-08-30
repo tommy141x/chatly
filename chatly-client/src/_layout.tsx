@@ -71,20 +71,20 @@ export default function Layout() {
 
   if (!appIsReady || !fontsLoaded) {
     return (
-      <GluestackUIProvider mode="dark">
-        <View className="flex flex-col h-screen max-w-screen">
-          <TitleBar />
+      <View className="flex flex-col h-screen max-w-screen">
+        <TitleBar />
+        <GluestackUIProvider mode="dark">
           <Splash />
-          <StatusBar style="auto" />
-        </View>
-      </GluestackUIProvider>
+        </GluestackUIProvider>
+        <StatusBar style="auto" />
+      </View>
     );
   }
 
   return (
-    <GluestackUIProvider mode="dark">
-      <View className="flex flex-col h-screen max-w-screen">
-        <TitleBar />
+    <View className="flex flex-col h-screen max-w-screen">
+      <TitleBar />
+      <GluestackUIProvider mode="dark">
         <Stack
           screenOptions={{
             headerShown: false,
@@ -108,8 +108,8 @@ export default function Layout() {
             },
           }}
         />
-        <StatusBar style="auto" />
-      </View>
-    </GluestackUIProvider>
+      </GluestackUIProvider>
+      <StatusBar style="auto" />
+    </View>
   );
 }

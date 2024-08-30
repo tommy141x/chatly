@@ -1,5 +1,8 @@
 import { validateUser } from "@/lib/utils";
 
+//TODO: return version number from package.json in the response
+//should add auto realtime updating for the server, since clients will auto update as well.
+
 export default function handler(app, route) {
   app.get(route, async (req, res) => {
     try {
