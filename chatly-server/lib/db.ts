@@ -88,8 +88,7 @@ async function initDB() {
         name VARCHAR(255) NOT NULL,
         bio TEXT,
         owner_id UUID REFERENCES users(id),
-        categories JSONB,
-        channels JSONB,
+        layout JSONB,
         roles JSONB
     );
   `;

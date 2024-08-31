@@ -50,6 +50,7 @@ export default function SideBar() {
       });
       const data = await response.json();
       setServers([...servers, data]);
+      console.log("Made server and got ID: " + data.id);
       router.replace(`/server/${data.id}`);
       setShowAlertDialog(false);
       // You might want to update the UI or navigate to the new server
@@ -84,7 +85,7 @@ export default function SideBar() {
       <Button variant="outline" className="w-14 h-14 rounded-full p-0">
         <MessageCircleMore className="h-7 w-7 text-primary" />
       </Button>
-      {servers.map((server) => (
+      {(servers || []).map((server) => (
         <Pressable
           key={server.id}
           onPress={() => router.replace(`/server/${server.id}`)}

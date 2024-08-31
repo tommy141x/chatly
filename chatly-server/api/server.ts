@@ -12,15 +12,14 @@ export default function handler(app, route) {
       }
       const { name, bio } = req.body;
 
-      const categories = [
-        { id: 1, name: "Welcome" },
-        { id: 2, name: "Lounge" },
-      ];
-
-      // Channels reference categories by ID
-      const channels = [
-        { name: "general", type: "text", category: 1 },
-        { name: "voice", type: "voice", category: 2 },
+      const defaultLayout = [
+        {
+          categoryName: "Welcome",
+          channels: [
+            { name: "general", type: "text" },
+            { name: "voice", type: "voice" },
+          ],
+        },
       ];
 
       const roles = [];
@@ -28,11 +27,11 @@ export default function handler(app, route) {
       // Insert new server
       const [newServer] = await query(
         `
-        INSERT INTO servers (name, bio, owner_id, categories, channels, roles)
-        VALUES ($1, $2, $3, $4, $5, $6)
+        INSERT INTO servers (name, bio, owner_id, layout, roles)
+        VALUES ($1, $2, $3, $4, $5)
         RETURNING id
         `,
-        [name, bio, user.id, categories, channels, roles],
+        [name, bio, user.id, defaultLayout, roles],
       );
 
       // Add owner to server_relationships

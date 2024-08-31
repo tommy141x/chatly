@@ -5,23 +5,33 @@ import { Text } from "@/components/ui/text";
 import { Heading } from "@/components/ui/heading";
 import { Grid, GridItem } from "@/components/ui/grid";
 import { MessageCircle, Mic } from "lucide-react-native";
+import { Input, InputField } from "@/components/ui/input";
 import { Button, ButtonText, ButtonSpinner } from "@/components/ui/button";
 import MenuBar from "@/components/menubar";
 import { endpointState } from "@/lib/endpoint";
 import { userState } from "@/lib/user";
 import { sessionState } from "@/lib/session";
-import { useLocalSearchParams, useGlobalSearchParams, Link } from "expo-router";
+import {
+  useLocalSearchParams,
+  useGlobalSearchParams,
+  router,
+} from "expo-router";
 export default function App() {
   const endpoint = endpointState.get();
   const [user, setUser] = userState.use();
   const [session, setSession] = sessionState.use();
+  const [input, setInput] = useState("");
   const local = useLocalSearchParams();
   const [server, setServer] = useState({});
-  const serverId = local.rest;
+  const [channel, setChannel] = useState({});
+  const serverId = local.rest[0];
+  const categoryId = local.rest[2];
+  const channelId = local.rest[4];
 
   const fetchServer = async () => {
     try {
       //include id in request
+      console.log(local);
       const response = await fetch(
         `${endpoint.url}/api/server?id=${serverId}`,
         {
@@ -34,7 +44,9 @@ export default function App() {
       );
       const data = await response.json();
       setServer(data);
-      console.log(data);
+      if (!categoryId) categoryId = "0";
+      if (!channelId) channelId = "0";
+      setChannel(data.layout[categoryId].channels[channelId]);
     } catch (error) {
       console.log(error);
     }
@@ -43,6 +55,8 @@ export default function App() {
   React.useEffect(() => {
     fetchServer();
   }, []);
+
+  const sendMessage = async () => {};
 
   return (
     <View className="flex flex-row h-full w-full p-5 gap-5 bg-background-0">
@@ -74,21 +88,30 @@ export default function App() {
                   {server.name}
                 </Text>
               </View>
-              {server?.channels?.map((channel) => (
-                <Button
-                  key={channel.id}
-                  className="bg-background-50 hover:!bg-background-100 rounded-xl m-1 justify-start"
-                  onPress={() => {
-                    console.log("clicked");
-                  }}
-                >
-                  {channel.type === "voice" ? (
-                    <Mic className="mr-1" />
-                  ) : (
-                    <MessageCircle className="mr-1" />
-                  )}
-                  {channel.name}
-                </Button>
+              {(server?.layout || []).map((category, categoryIndex) => (
+                <View key={categoryIndex}>
+                  <Text className="text-md ml-1 mt-2 px-5 font-bold text-white">
+                    {category.categoryName}
+                  </Text>
+                  {category.channels.map((channel, channelIndex) => (
+                    <Button
+                      key={channel.id}
+                      className="bg-background-50 hover:!bg-background-100 rounded-xl m-1 justify-start"
+                      onPress={() => {
+                        router.push(
+                          `/server/${server.id}/category/${categoryIndex}/channel/${channelIndex}`
+                        );
+                      }}
+                    >
+                      {channel.type === "voice" ? (
+                        <Mic className="mr-1" />
+                      ) : (
+                        <MessageCircle className="mr-1" />
+                      )}
+                      <Text>{channel.name} </Text>
+                    </Button>
+                  ))}
+                </View>
               ))}
             </View>
           </GridItem>
@@ -97,7 +120,29 @@ export default function App() {
             _extra={{
               className: "col-span-3",
             }}
-          ></GridItem>
+          >
+            {channel && (
+              <View>
+                <Text className="text-2xl font-bold text-white">
+                  {channel.name}
+                </Text>
+                <Input variant="outline" size="md">
+                  <InputField
+                    onChange={(e) => {
+                      setInput(e.target.value);
+                    }}
+                    placeholder="Enter Text here..."
+                  />
+                </Input>
+                <Button
+                  onPress={sendMessage}
+                  className="bg-primary-200 rounded-xl"
+                >
+                  <ButtonText>Send</ButtonText>
+                </Button>
+              </View>
+            )}
+          </GridItem>
         </Grid>
       </View>
     </View>
