@@ -27,6 +27,10 @@ export const isWebDesktop = isWeb && isDesktop; // Browser on desktop
 
 export default isTauri; // True if running in a Tauri app
 
+export const isWindowSmall = () => {
+  return window.innerWidth < 700;
+};
+
 export const pingServer = async () => {
   let endpoint = endpointState.get();
   try {

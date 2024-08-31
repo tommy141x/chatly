@@ -1,5 +1,5 @@
 import React from "react";
-import { View } from "react-native";
+import { View, Text } from "react-native";
 import {
   Actionsheet,
   ActionsheetBackdrop,
@@ -7,6 +7,7 @@ import {
   ActionsheetDragIndicator,
   ActionsheetDragIndicatorWrapper,
 } from "@/components/ui/actionsheet";
+
 import { Grid, GridItem } from "@/components/ui/grid";
 import { Heading } from "@/components/ui/heading";
 import {
@@ -17,16 +18,16 @@ import {
   AlertDialogBody,
   AlertDialogFooter,
 } from "@/components/ui/alert-dialog";
-import { isMobile } from "@/lib/utils";
+import { isMobile, isWindowSmall } from "@/lib/utils";
 
 export const Dialog = ({
   isOpen,
   onClose,
-  snapPoints = [95],
+  snapPoints = [70],
   children,
   ...props
 }) => {
-  if (isMobile) {
+  if (isMobile || isWindowSmall()) {
     return (
       <Actionsheet
         isOpen={isOpen}
@@ -35,11 +36,11 @@ export const Dialog = ({
         {...props}
       >
         <ActionsheetBackdrop />
-        <ActionsheetContent className="px-10 flex flex-col h-full">
-          <ActionsheetDragIndicatorWrapper>
-            <ActionsheetDragIndicator />
+        <ActionsheetContent className="w-full h-full">
+          <ActionsheetDragIndicatorWrapper className="w-full h-full flex flex-col">
+            <ActionsheetDragIndicator className="!w-28 !h-2" />
+            <View className="w-full h-full flex mt-4">{children}</View>
           </ActionsheetDragIndicatorWrapper>
-          {children}
         </ActionsheetContent>
       </Actionsheet>
     );
@@ -65,12 +66,7 @@ export const DialogHeader = ({ children, ...props }) => {
 
 export const DialogContent = ({ children, ...props }) => {
   if (isMobile) {
-    return (
-      <View className="w-full" {...props}>
-        {/*Adding flex-1 here shoots the dialog footer off into the void */}
-        {children}
-      </View>
-    );
+    return <View {...props}>{children}</View>;
   } else {
     return <AlertDialogBody {...props}>{children}</AlertDialogBody>;
   }

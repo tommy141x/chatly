@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { Children, useState } from "react";
 import { View, ScrollView } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { Image } from "@/components/ui/image";
@@ -22,12 +22,15 @@ import {
 import { Heading } from "@/components/ui/heading";
 import { Text } from "@/components/ui/text";
 import { Input, InputField } from "@/components/ui/input";
+import { isMobile, isWindowSmall } from "@/lib/utils";
+import { router } from "expo-router";
 
 export default function SideBar() {
   const navigation = useNavigation();
   const endpoint = endpointState.get();
   const [user, setUser] = userState.use();
   const [session, setSession] = sessionState.use();
+  const [servers, setServers] = useState([]);
   const [serverName, setServerName] = useState("");
   const [serverBio, setServerBio] = useState("");
   const [showAlertDialog, setShowAlertDialog] = useState(false);
@@ -46,7 +49,8 @@ export default function SideBar() {
         }),
       });
       const data = await response.json();
-      console.log("Server created:", data);
+      setServers([...servers, data]);
+      router.replace(`/server/${data.id}`);
       setShowAlertDialog(false);
       // You might want to update the UI or navigate to the new server
     } catch (error) {
@@ -55,17 +59,44 @@ export default function SideBar() {
     }
   };
 
+  const fetchServers = async () => {
+    try {
+      const response = await fetch(`${endpoint.url}/api/server`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${session}`,
+        },
+      });
+      const data = await response.json();
+      setServers(data); // Store the fetched servers in state
+    } catch (error) {
+      console.error("Failed to fetch servers:", error);
+    }
+  };
+
+  React.useEffect(() => {
+    fetchServers();
+  }, []);
+
   return (
-    <View className="bg-background-50 rounded-3xl h-full w-full gap-4 items-center justify-start pt-4">
+    <View className="w-[90px] bg-background-50 rounded-3xl h-full gap-4 flex items-center justify-start pt-4">
       <Button variant="outline" className="w-14 h-14 rounded-full p-0">
         <MessageCircleMore className="h-7 w-7 text-primary" />
       </Button>
-      <Image
-        source={{
-          uri: "https://mir-s3-cdn-cf.behance.net/project_modules/disp/ca5d4f138939351.6274c569dd1b6.gif",
-        }}
-        className="w-14 h-14 mx-auto rounded-full"
-      />
+      {servers.map((server) => (
+        <Pressable
+          key={server.id}
+          onPress={() => router.replace(`/server/${server.id}`)}
+        >
+          <Image
+            source={{
+              uri: `${endpoint.url}/pub/serverAvatars/${server.id}.png`,
+            }}
+            className="w-14 h-14 rounded-full hover:opacity-50 transition duration-300"
+          />
+        </Pressable>
+      ))}
       <Button
         variant="outline"
         onPress={() => setShowAlertDialog(true)}
@@ -77,6 +108,7 @@ export default function SideBar() {
       <Dialog
         isOpen={showAlertDialog}
         onClose={() => setShowAlertDialog(false)}
+        snapPoints={[55]}
       >
         <DialogContent>
           <DialogHeader>
@@ -84,35 +116,31 @@ export default function SideBar() {
               Create a New Server
             </Heading>
           </DialogHeader>
-          <DialogContent>
-            <ScrollView>
-              <FormControl size="md" className="my-4">
-                <FormControlLabel>
-                  <FormControlLabelText>Server Name</FormControlLabelText>
-                </FormControlLabel>
-                <Input className="rounded-xl p-1 border-2">
-                  <InputField
-                    placeholder="Enter server name"
-                    value={serverName}
-                    onChangeText={setServerName}
-                  />
-                </Input>
-              </FormControl>
+          <FormControl size="md" className="my-4">
+            <FormControlLabel>
+              <FormControlLabelText>Server Name</FormControlLabelText>
+            </FormControlLabel>
+            <Input className="rounded-xl p-1 border-2">
+              <InputField
+                placeholder="Enter server name"
+                value={serverName}
+                onChangeText={setServerName}
+              />
+            </Input>
+          </FormControl>
 
-              <FormControl size="md" className="mb-4">
-                <FormControlLabel>
-                  <FormControlLabelText>Server Bio</FormControlLabelText>
-                </FormControlLabel>
-                <Input className="rounded-xl p-1 border-2">
-                  <InputField
-                    placeholder="Enter server bio"
-                    value={serverBio}
-                    onChangeText={setServerBio}
-                  />
-                </Input>
-              </FormControl>
-            </ScrollView>
-          </DialogContent>
+          <FormControl size="md" className="mb-4">
+            <FormControlLabel>
+              <FormControlLabelText>Server Bio</FormControlLabelText>
+            </FormControlLabel>
+            <Input className="rounded-xl p-1 border-2">
+              <InputField
+                placeholder="Enter server bio"
+                value={serverBio}
+                onChangeText={setServerBio}
+              />
+            </Input>
+          </FormControl>
           <DialogFooter>
             <Button
               variant="outline"

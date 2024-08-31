@@ -100,7 +100,7 @@ async function initDB() {
         server_id INT REFERENCES servers(id),
         roles JSONB,
         joined_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-        banned BOOLEAN
+        banned BOOLEAN DEFAULT FALSE
     );
   `;
   await sql`

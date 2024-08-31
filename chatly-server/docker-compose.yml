@@ -44,7 +44,7 @@ services:
     working_dir: /app
     command: bun --watch index.ts
     ports:
-      - "${PORT}:3000"
+      - "${API_PORT}:3000"
     depends_on:
       timescaledb:
         condition: service_healthy

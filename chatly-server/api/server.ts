@@ -28,17 +28,17 @@ export default function handler(app, route) {
       // Insert new server
       const [newServer] = await query(
         `
-        INSERT INTO servers (name, bio, owner_id, categories, roles)
-        VALUES ($1, $2, $3, $4, $5)
+        INSERT INTO servers (name, bio, owner_id, categories, channels, roles)
+        VALUES ($1, $2, $3, $4, $5, $6)
         RETURNING id
         `,
-        [name, bio, user.id, categories, roles],
+        [name, bio, user.id, categories, channels, roles],
       );
 
       // Add owner to server_relationships
       await query(
         `
-        INSERT INTO server_relationships (user_id, server_id)
+        INSERT INTO server_relationships (user_id, server_id, roles)
         VALUES ($1, $2, $3)
         `,
         [user.id, newServer.id, []],
@@ -68,7 +68,28 @@ export default function handler(app, route) {
           .status(401)
           .json({ error: "Invalid or expired session token" });
       }
+
       const { id } = req.query;
+
+      // If no server id is provided, return all servers where user_id equals user.id
+      if (!id) {
+        const servers = await query(
+          `
+          SELECT s.id, s.name, s.bio
+          FROM servers s
+          WHERE s.id IN (
+            SELECT sr.server_id
+            FROM server_relationships sr
+            WHERE sr.user_id = $1
+          )
+          `,
+          [user.id],
+        );
+
+        return res.json(servers);
+      }
+
+      // If server id is provided, return the specific server
       const [server] = await query(
         `
         SELECT s.*,
@@ -80,9 +101,11 @@ export default function handler(app, route) {
         `,
         [id],
       );
+
       if (!server) {
         return res.status(404).json({ error: "Server not found" });
       }
+
       res.json(server);
     } catch (error) {
       console.error(error);
