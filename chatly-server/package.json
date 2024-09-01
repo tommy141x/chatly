@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "buncors": "^0.2.4",
-    "bunrest": "^1.3.8",
+    "bunrest": "git+https://github.com/lau1944/bunrest.git",
     "livekit-server-sdk": "^2.6.1",
     "postgres": "^3.4.4"
   }
