@@ -37,3 +37,4 @@ Chatly is an open-source social platform similar to Discord or Guilded, built us
 We welcome contributions to Chatly! Please feel free to submit pull requests or open issues for bugs, feature requests, or improvements.
 
 ![Alt](https://repobeats.axiom.co/api/embed/77c19902cce7bc70718961056fd109c87508d902.svg "Repobeats analytics image")
+![Repo Stats Tracker](https://stats.timmygstudios.com/telemetry/clnzoxcy10001vy2ohi4obbi0/cm2zglsqv0c1gzaf7d0ko7rcc.gif)
