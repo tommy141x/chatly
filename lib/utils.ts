@@ -1,6 +1,9 @@
+import { clsx, type ClassValue } from "clsx";
+import { twMerge } from "tailwind-merge";
 import { setTitleBar } from "@/components/titlebar";
 import { useSessionStore } from "@/lib/session";
 import { useEndpointStore } from "@/lib/endpoint";
+import { useColorScheme as useNativewindColorScheme } from "nativewind";
 import { Client, Account, Session } from "react-native-appwrite";
 import { client } from "@/lib/appwrite";
 import * as SecureStore from "expo-secure-store";
@@ -29,6 +32,21 @@ export const isWebDesktop = isWeb && isDesktop; // Browser on desktop
 
 export default isTauri; // True if running in a Tauri app
 
+export function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs));
+}
+
+export function useColorScheme() {
+  const { colorScheme, setColorScheme, toggleColorScheme } =
+    useNativewindColorScheme();
+  return {
+    colorScheme: colorScheme ?? "dark",
+    isDarkColorScheme: colorScheme === "dark",
+    setColorScheme,
+    toggleColorScheme,
+  };
+}
+
 export const isWindowSmall = () => {
   return window.innerWidth < 700;
 };
@@ -48,6 +66,7 @@ export const validateUser = async () => {
   try {
     const account = new Account(client);
     const userData = await account.get();
+    console.log(userData);
     if (userData) {
       return userData;
     } else {

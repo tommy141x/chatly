@@ -1,10 +1,9 @@
 import React, { useState } from "react";
 import { View, ScrollView } from "react-native";
-import { Grid, GridItem } from "@/components/ui/grid";
-import { Text } from "@/components/ui/text";
 import { logout } from "@/lib/utils";
 import { useUserStore } from "@/lib/user";
-import { Button, ButtonText, ButtonSpinner } from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
+import { Text } from "@/components/ui/text";
 import { router } from "expo-router";
 
 export default function Server() {
@@ -27,19 +26,19 @@ export default function Server() {
 
   return (
     <View className="h-full">
-      <Grid
+      <View
         className="h-full gap-5"
         _extra={{
           className: "grid-cols-4",
         }}
       >
-        <GridItem
+        <View
           className="bg-background-50 rounded-3xl"
           _extra={{
             className: "col-span-1",
           }}
-        ></GridItem>
-        <GridItem
+        ></View>
+        <View
           className="bg-background-50 rounded-3xl"
           _extra={{
             className: "col-span-3",
@@ -53,10 +52,10 @@ export default function Server() {
             className="mt-4 mx-auto"
             disabled={isLoggingOut}
           >
-            {isLoggingOut ? <ButtonSpinner /> : <ButtonText>Logout</ButtonText>}
+            {isLoggingOut ? <Text>spinner</Text> : <Text>Logout</Text>}
           </Button>
-        </GridItem>
-      </Grid>
+        </View>
+      </View>
     </View>
   );
 }

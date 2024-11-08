@@ -1,13 +1,4 @@
 import * as React from "react";
-import {
-  AlertDialog,
-  AlertDialogBackdrop,
-  AlertDialogContent,
-  AlertDialogHeader,
-  AlertDialogCloseButton,
-  AlertDialogFooter,
-  AlertDialogBody,
-} from "@/components/ui/alert-dialog";
 import { Heading } from "@/components/ui/heading";
 import { Text } from "@/components/ui/text";
 import { Button, ButtonText } from "@/components/ui/button";
@@ -27,7 +18,7 @@ export default function App() {
         const { setUser } = useUserStore.getState();
         setUser(userData);
       } else {
-        router.replace("/login");
+        //router.replace("/login");
       }
     };
     load();
@@ -35,7 +26,7 @@ export default function App() {
 
   const handleClose = () => setShowAlertDialog(false);
   return (
-    <View className="flex flex-row h-full w-full p-5 gap-5 bg-background-0">
+    <View className="flex flex-row h-full w-full p-5 gap-5 bg-background">
       <MenuBar />
       <View className="flex-grow">
         <Server />

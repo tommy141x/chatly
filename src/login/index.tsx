@@ -1,129 +1,181 @@
 import * as React from "react";
 import { View } from "react-native";
 import { router } from "expo-router";
+import { useForm, Controller } from "react-hook-form";
+import { Account } from "react-native-appwrite";
+import { client } from "@/lib/appwrite";
 import { useUserStore } from "@/lib/user";
 import { useSessionStore } from "@/lib/session";
 import { useEndpointStore } from "@/lib/endpoint";
-import { validateUser } from "@/lib/utils";
 import { useDebouncedCallback } from "use-debounce";
-import { Account } from "react-native-appwrite";
-import { client } from "@/lib/appwrite";
+import { toast } from "sonner-native";
+import { getDeviceInfo } from "@/lib/utils";
+
+// UI Components
 import { Card } from "@/components/ui/card";
-import { Divider } from "@/components/ui/divider";
-import { Button, ButtonText, ButtonSpinner } from "@/components/ui/button";
-import { CircleUserRound } from "lucide-react-native";
-import { Input, InputField, InputSlot } from "@/components/ui/input";
-import { isMobile, getDeviceInfo } from "@/lib/utils";
-import {
-  FormControl,
-  FormControlLabel,
-  FormControlLabelText,
-  FormControlError,
-  FormControlErrorIcon,
-  FormControlErrorText,
-} from "@/components/ui/form-control";
-import { Heading } from "@/components/ui/heading";
-import { Text } from "@/components/ui/text";
+import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { H4, P } from "@/components/ui/typography";
+import { isMobile } from "@/lib/utils";
+
+interface LoginFormData {
+  email: string;
+  password: string;
+}
 
 function Login() {
   const { endpoint } = useEndpointStore.getState();
   const { setUser } = useUserStore.getState();
-  const [error, setError] = React.useState("");
-  const [userInput, setUserInput] = React.useState("");
-  const [password, setPassword] = React.useState("");
   const [isLoading, setIsLoading] = React.useState(false);
 
-  const handleLogin = async () => {
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+    setError: setFormError,
+  } = useForm<LoginFormData>({
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+  });
+
+  const onSubmit = async (data: LoginFormData) => {
     const { setSession } = useSessionStore.getState();
     setIsLoading(true);
-    setError("");
+
     try {
       const deviceInfo = await getDeviceInfo();
-
       const account = new Account(client);
 
-      const promise = await account.createEmailPasswordSession(
-        userInput,
-        password
+      const session = await account.createEmailPasswordSession(
+        data.email,
+        data.password,
       );
 
-      if (promise) {
-        setSession(promise.$id);
+      if (session) {
+        setSession(session.$id);
+        toast.success("Logged in successfully!");
         router.replace("/");
       } else {
-        setError("Login failed");
+        throw new Error("Login failed");
       }
-    } catch (error) {
-      setError("An error occurred during login");
+    } catch (error: any) {
+      const errorMessage = error.message || "An error occurred during login";
+      toast.error(errorMessage);
+      setFormError("root", {
+        type: "manual",
+        message: errorMessage,
+      });
     } finally {
       setIsLoading(false);
     }
   };
 
-  const debouncedHandleLogin = useDebouncedCallback(handleLogin, 0, {
-    maxWait: 2000,
-  });
+  const debouncedHandleSubmit = useDebouncedCallback(
+    handleSubmit(onSubmit),
+    0,
+    {
+      maxWait: 2000,
+    },
+  );
 
   return (
-    <View className="flex-1 flex items-center justify-center bg-background-0">
+    <View className="flex-1 flex items-center justify-center bg-background">
       <Card
-        size="md"
-        variant="elevated"
-        className={`mb-5 rounded-3xl p-10 ${
-          isMobile ? "w-full" : "bg-background-50 w-[450px]"
-        }`}
+        className={`mb-5 rounded-3xl p-10 ${isMobile ? "w-full" : "w-[450px]"}`}
       >
-        <Text
-          className={`${isMobile ? "text-lg" : "text-sm"} font-medium mb-2`}
+        <H4
+          className={`${isMobile ? "text-lg" : "text-base"} font-medium mb-2`}
         >
           {endpoint.name} - {endpoint.description}
-        </Text>
-        <Heading size={`${isMobile ? "3xl" : "xl"}`} className="mb-2">
-          Log In
-        </Heading>
-        <Text className={`${error ? "text-red-500" : "text-gray-500"}`}>
-          {error || "Enter your username and password"}
-        </Text>
+        </H4>
 
-        <FormControl size="md" isInvalid={!!error} className="my-4">
-          <FormControlLabel>
-            <FormControlLabelText>Email</FormControlLabelText>
-          </FormControlLabel>
-          <Input className="rounded-xl p-1 !border-2 !ring-2">
-            <InputField
-              placeholder="myemail"
-              value={userInput}
-              onChangeText={setUserInput}
+        <H4 className={`${isMobile ? "text-3xl" : "text-xl"} mb-2`}>Log In</H4>
+
+        <P className="text-sm text-muted-foreground mb-6">
+          Enter your email and password to access your account.
+        </P>
+
+        <div className="space-y-4">
+          <div>
+            <Label nativeID="email">Email</Label>
+            <Controller
+              control={control}
+              name="email"
+              rules={{
+                required: "Email is required",
+                pattern: {
+                  value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                  message: "Invalid email address",
+                },
+              }}
+              render={({ field: { onChange, value } }) => (
+                <Input
+                  placeholder="my@email.com"
+                  value={value}
+                  onChangeText={onChange}
+                  aria-labelledby="email"
+                  className="rounded-xl mt-2"
+                />
+              )}
             />
-          </Input>
-        </FormControl>
+            {errors.email && (
+              <P className="text-sm text-destructive mt-1">
+                {errors.email.message}
+              </P>
+            )}
+          </div>
 
-        <FormControl size="md" isInvalid={!!error} className="mb-4">
-          <FormControlLabel>
-            <FormControlLabelText>Password</FormControlLabelText>
-          </FormControlLabel>
-          <Input className="rounded-xl p-1 !border-2 !ring-2">
-            <InputField
-              placeholder="mysecurepassword"
-              secureTextEntry
-              value={password}
-              onChangeText={setPassword}
+          <div>
+            <Label nativeID="password">Password</Label>
+            <Controller
+              control={control}
+              name="password"
+              rules={{
+                required: "Password is required",
+              }}
+              render={({ field: { onChange, value } }) => (
+                <Input
+                  placeholder="Enter your password"
+                  value={value}
+                  onChangeText={onChange}
+                  secureTextEntry
+                  aria-labelledby="password"
+                  className="rounded-xl mt-2"
+                />
+              )}
             />
-          </Input>
-        </FormControl>
+            {errors.password && (
+              <P className="text-sm text-destructive mt-1">
+                {errors.password.message}
+              </P>
+            )}
+          </div>
 
-        <Button onPress={debouncedHandleLogin} className="rounded-xl mb-4">
-          {isLoading ? <ButtonSpinner /> : <ButtonText>Log In</ButtonText>}
-        </Button>
+          {errors.root && (
+            <P className="text-sm text-destructive">{errors.root.message}</P>
+          )}
 
-        <Divider className="my-4" />
+          <Button
+            onPress={debouncedHandleSubmit}
+            className="w-full rounded-xl"
+            disabled={isLoading}
+          >
+            {isLoading ? <P>Logging in...</P> : <P>Log In</P>}
+          </Button>
+        </div>
+
+        <Separator className="my-6" />
 
         <Button
           variant="outline"
           onPress={() => router.replace("/signup")}
-          className="rounded-xl"
+          className="w-full rounded-xl"
         >
-          <ButtonText>Don't have an account? Sign up</ButtonText>
+          <P>Don't have an account? Sign up</P>
         </Button>
       </Card>
     </View>

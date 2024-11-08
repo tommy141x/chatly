@@ -1,9 +1,7 @@
 import React, { Children, useState } from "react";
-import { View } from "react-native";
-import { Image } from "@/components/ui/image";
+import { View, Image } from "react-native";
 import { Text } from "@/components/ui/text";
 import { Heading } from "@/components/ui/heading";
-import { Grid, GridItem } from "@/components/ui/grid";
 import { MessageCircle, Mic } from "lucide-react-native";
 import { Input, InputField } from "@/components/ui/input";
 import { Button, ButtonText, ButtonSpinner } from "@/components/ui/button";
@@ -62,13 +60,13 @@ export default function App() {
     <View className="flex flex-row h-full w-full p-5 gap-5 bg-background-0">
       <MenuBar />
       <View className="flex-grow">
-        <Grid
+        <View
           className="h-full gap-5"
           _extra={{
             className: "grid-cols-4",
           }}
         >
-          <GridItem
+          <View
             className="bg-background-50 rounded-3xl"
             _extra={{
               className: "col-span-1",
@@ -114,8 +112,8 @@ export default function App() {
                 </View>
               ))}
             </View>
-          </GridItem>
-          <GridItem
+          </View>
+          <View
             className="bg-background-50 rounded-3xl"
             _extra={{
               className: "col-span-3",
@@ -142,8 +140,8 @@ export default function App() {
                 </Button>
               </View>
             )}
-          </GridItem>
-        </Grid>
+          </View>
+        </View>
       </View>
     </View>
   );

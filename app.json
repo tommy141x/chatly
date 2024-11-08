@@ -11,7 +11,8 @@
       "expo-video",
       "@config-plugins/react-native-webrtc",
       "@livekit/react-native-expo-plugin",
-      "expo-font"
+      "expo-font",
+      "expo-build-properties"
     ],
     "scheme": "chatly-scheme",
     "ios": {

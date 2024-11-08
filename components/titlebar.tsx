@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { View } from "react-native";
 import { Minus, X, Square } from "lucide-react-native";
-import { Pressable } from "@/components/ui/pressable";
+import { Pressable, PressableProps } from "react-native";
 import { getCurrentWindow } from "@tauri-apps/api/window";
 import { isDesktop } from "@/lib/utils";
 

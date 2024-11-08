@@ -1,14 +1,17 @@
+import "@/global.css";
 import * as React from "react";
+import { PortalHost } from "@rn-primitives/portal";
 import { StatusBar } from "expo-status-bar";
-import { GluestackUIProvider } from "@/components/ui/gluestack-ui-provider";
 import { TitleBar } from "@/components/titlebar";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { View } from "react-native";
 import { useUserStore } from "@/lib/user";
-import { pingServer, validateUser } from "@/lib/utils";
+import { pingServer, validateUser, isWeb } from "@/lib/utils";
 import { endpointState, setInitialEndpointState } from "@/lib/endpoint";
 import * as SplashScreen from "expo-splash-screen";
 import Splash from "@/components/splash-web";
 import { Easing } from "react-native-reanimated";
+import { Toaster } from "sonner-native";
 import { Stack } from "expo-router";
 import {
   useFonts,
@@ -22,11 +25,12 @@ import {
   Inter_800ExtraBold,
   Inter_900Black,
 } from "@expo-google-fonts/inter";
-import "@/styles/global.css";
+import { useColorScheme } from "@/lib/utils";
 
 SplashScreen.preventAutoHideAsync();
 
 export default function Layout() {
+  const { colorScheme, setColorScheme, isDarkColorScheme } = useColorScheme();
   const [appIsReady, setAppIsReady] = React.useState(false);
   const { user, setUser } = useUserStore.getState();
   const [fontsLoaded] = useFonts({
@@ -47,8 +51,26 @@ export default function Layout() {
     },
   });
 
+  const loadColorScheme = async () => {
+    setColorScheme("dark");
+    const theme = await AsyncStorage.getItem("theme");
+    if (!theme) {
+      AsyncStorage.setItem("theme", colorScheme);
+      return;
+    }
+    const colorTheme = theme === "dark" ? "dark" : "light";
+    if (colorTheme !== colorScheme) {
+      setColorScheme(colorTheme);
+      return;
+    }
+  };
+
   React.useEffect(() => {
     async function prepare() {
+      if (isWeb) {
+        document.documentElement.classList.add("bg-background");
+      }
+      await loadColorScheme();
       try {
         await setInitialEndpointState();
         const online = await pingServer();
@@ -79,9 +101,7 @@ export default function Layout() {
     return (
       <View className="flex flex-col h-screen max-w-screen">
         <TitleBar />
-        <GluestackUIProvider mode="dark">
-          <Splash />
-        </GluestackUIProvider>
+        <Splash />
         <StatusBar style="auto" />
       </View>
     );
@@ -90,33 +110,33 @@ export default function Layout() {
   /* transitionSpec does not work in expo-router */
 
   return (
-    <View className="flex flex-col h-screen max-w-screen">
+    <View className="bg-background flex flex-col h-screen max-w-screen">
       <TitleBar />
-      <GluestackUIProvider mode="dark">
-        <Stack
-          screenOptions={{
-            headerShown: false,
-            animationEnabled: true,
-            cardStyleInterpolator: forFade,
-            transitionSpec: {
-              open: {
-                animation: "timing",
-                config: {
-                  duration: 200,
-                  easing: Easing.out(Easing.ease),
-                },
-              },
-              close: {
-                animation: "timing",
-                config: {
-                  duration: 200,
-                  easing: Easing.in(Easing.ease),
-                },
+      <Stack
+        screenOptions={{
+          headerShown: false,
+          animationEnabled: true,
+          cardStyleInterpolator: forFade,
+          transitionSpec: {
+            open: {
+              animation: "timing",
+              config: {
+                duration: 200,
+                easing: Easing.out(Easing.ease),
               },
             },
-          }}
-        />
-      </GluestackUIProvider>
+            close: {
+              animation: "timing",
+              config: {
+                duration: 200,
+                easing: Easing.in(Easing.ease),
+              },
+            },
+          },
+        }}
+      />
+      <PortalHost />
+      <Toaster />
       <StatusBar style="auto" />
     </View>
   );

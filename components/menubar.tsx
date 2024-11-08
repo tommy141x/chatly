@@ -1,40 +1,64 @@
-import React, { Children, useState } from "react";
-import { View, ScrollView } from "react-native";
-import { Image } from "@/components/ui/image";
+import React from "react";
+import { View, ScrollView, Image } from "react-native";
+import { router } from "expo-router";
+import { useForm, Controller } from "react-hook-form";
+import { HousePlus, MessageCircleMore } from "lucide-react-native";
+import { toast } from "sonner-native";
+
+// Store imports
 import { useUserStore } from "@/lib/user";
 import { useSessionStore } from "@/lib/session";
-import { HousePlus, MessageCircleMore } from "lucide-react-native";
 import { useEndpointStore } from "@/lib/endpoint";
-import { Button, ButtonText } from "@/components/ui/button";
-import { Pressable } from "@/components/ui/pressable";
+
+// UI Components
+import { Button } from "@/components/ui/button";
+import { Pressable } from "react-native";
 import {
   Dialog,
   DialogContent,
   DialogFooter,
   DialogHeader,
-} from "@/components/dialog";
-import {
-  FormControl,
-  FormControlLabel,
-  FormControlLabelText,
-} from "@/components/ui/form-control";
-import { Heading } from "@/components/ui/heading";
-import { Text } from "@/components/ui/text";
-import { Input, InputField } from "@/components/ui/input";
-import { isMobile, isWindowSmall } from "@/lib/utils";
-import { router } from "expo-router";
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { H4, P } from "@/components/ui/typography";
+
+interface ServerFormData {
+  name: string;
+  bio: string;
+}
+
+interface Server {
+  id: string;
+  name: string;
+  bio: string;
+}
 
 export default function SideBar() {
   const { endpoint } = useEndpointStore.getState();
   const { user } = useUserStore.getState();
   const { session } = useSessionStore.getState();
-  const [servers, setServers] = useState([]);
-  const [serverName, setServerName] = useState("");
-  const [serverBio, setServerBio] = useState("");
-  const [showAlertDialog, setShowAlertDialog] = useState(false);
+  const [servers, setServers] = React.useState<Server[]>([]);
+  const [showDialog, setShowDialog] = React.useState(false);
+  const [isLoading, setIsLoading] = React.useState(false);
 
-  const createServer = async () => {
-    /*try {
+  const {
+    control,
+    handleSubmit,
+    reset,
+    formState: { errors },
+    setError: setFormError,
+  } = useForm<ServerFormData>({
+    defaultValues: {
+      name: "",
+      bio: "",
+    },
+  });
+
+  const createServer = async (data: ServerFormData) => {
+    setIsLoading(true);
+    try {
+      /* Keeping your API method commented as requested
       const response = await fetch(`${endpoint.url}/api/server`, {
         method: "POST",
         headers: {
@@ -42,24 +66,30 @@ export default function SideBar() {
           Authorization: `Bearer ${session}`,
         },
         body: JSON.stringify({
-          name: serverName,
-          bio: serverBio,
+          name: data.name,
+          bio: data.bio,
         }),
       });
-      const data = await response.json();
-      setServers([...servers, data]);
-      console.log("Made server and got ID: " + data.id);
-      router.replace(`/server/${data.id}`);
-      setShowAlertDialog(false);
-      // You might want to update the UI or navigate to the new server
-    } catch (error) {
-      console.error("Failed to create server:", error);
-      // Handle error (e.g., show an error message to the user)
-      }*/
+      const serverData = await response.json();
+      setServers([...servers, serverData]);
+      toast.success('Server created successfully!');
+      router.replace(`/server/${serverData.id}`);
+      */
+      handleCloseDialog();
+    } catch (error: any) {
+      toast.error(error.message || "Failed to create server");
+      setFormError("root", {
+        type: "manual",
+        message: error.message || "Failed to create server",
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const fetchServers = async () => {
-    /*try {
+    try {
+      /* Keeping your API method commented as requested
       const response = await fetch(`${endpoint.url}/api/server`, {
         method: "GET",
         headers: {
@@ -68,10 +98,17 @@ export default function SideBar() {
         },
       });
       const data = await response.json();
-      setServers(data); // Store the fetched servers in state
-    } catch (error) {
+      setServers(data);
+      */
+    } catch (error: any) {
+      toast.error("Failed to fetch servers");
       console.error("Failed to fetch servers:", error);
-      }*/
+    }
+  };
+
+  const handleCloseDialog = () => {
+    setShowDialog(false);
+    reset();
   };
 
   React.useEffect(() => {
@@ -83,7 +120,8 @@ export default function SideBar() {
       <Button variant="outline" className="w-14 h-14 rounded-full p-0">
         <MessageCircleMore className="h-7 w-7 text-primary" />
       </Button>
-      {(servers || []).map((server) => (
+
+      {servers.map((server) => (
         <Pressable
           key={server.id}
           onPress={() => router.replace(`/server/${server.id}`)}
@@ -96,61 +134,98 @@ export default function SideBar() {
           />
         </Pressable>
       ))}
+
       <Button
         variant="outline"
-        onPress={() => setShowAlertDialog(true)}
+        onPress={() => setShowDialog(true)}
         className="w-14 h-14 rounded-full items-center justify-center p-0"
       >
         <HousePlus className="h-7 w-7 text-primary" />
       </Button>
 
-      <Dialog
-        isOpen={showAlertDialog}
-        onClose={() => setShowAlertDialog(false)}
-        snapPoints={[55]}
-      >
+      <Dialog open={showDialog} onOpenChange={handleCloseDialog}>
         <DialogContent>
           <DialogHeader>
-            <Heading size="lg" className="text-typography-950 font-semibold">
-              Create a New Server
-            </Heading>
+            <H4 className="font-semibold">Create a New Server</H4>
+            <P className="text-sm text-muted-foreground">
+              Fill in the details for your new server
+            </P>
           </DialogHeader>
-          <FormControl size="md" className="my-4">
-            <FormControlLabel>
-              <FormControlLabelText>Server Name</FormControlLabelText>
-            </FormControlLabel>
-            <Input className="rounded-xl p-1 border-2">
-              <InputField
-                placeholder="Enter server name"
-                value={serverName}
-                onChangeText={setServerName}
-              />
-            </Input>
-          </FormControl>
 
-          <FormControl size="md" className="mb-4">
-            <FormControlLabel>
-              <FormControlLabelText>Server Bio</FormControlLabelText>
-            </FormControlLabel>
-            <Input className="rounded-xl p-1 border-2">
-              <InputField
-                placeholder="Enter server bio"
-                value={serverBio}
-                onChangeText={setServerBio}
+          <div className="space-y-4 py-4">
+            <div>
+              <Label nativeID="serverName">Server Name</Label>
+              <Controller
+                control={control}
+                name="name"
+                rules={{
+                  required: "Server name is required",
+                  minLength: {
+                    value: 3,
+                    message: "Server name must be at least 3 characters",
+                  },
+                }}
+                render={({ field: { onChange, value } }) => (
+                  <Input
+                    placeholder="Enter server name"
+                    value={value}
+                    onChangeText={onChange}
+                    aria-labelledby="serverName"
+                    className="rounded-xl mt-2"
+                  />
+                )}
               />
-            </Input>
-          </FormControl>
+              {errors.name && (
+                <P className="text-sm text-destructive mt-1">
+                  {errors.name.message}
+                </P>
+              )}
+            </div>
+
+            <div>
+              <Label nativeID="serverBio">Server Bio</Label>
+              <Controller
+                control={control}
+                name="bio"
+                rules={{
+                  required: "Server bio is required",
+                  maxLength: {
+                    value: 200,
+                    message: "Bio must be less than 200 characters",
+                  },
+                }}
+                render={({ field: { onChange, value } }) => (
+                  <Input
+                    placeholder="Enter server bio"
+                    value={value}
+                    onChangeText={onChange}
+                    aria-labelledby="serverBio"
+                    className="rounded-xl mt-2"
+                  />
+                )}
+              />
+              {errors.bio && (
+                <P className="text-sm text-destructive mt-1">
+                  {errors.bio.message}
+                </P>
+              )}
+            </div>
+          </div>
+
           <DialogFooter>
             <Button
               variant="outline"
-              action="secondary"
-              onPress={() => setShowAlertDialog(false)}
-              size="sm"
+              onPress={handleCloseDialog}
+              className="w-24"
             >
-              <ButtonText>Cancel</ButtonText>
+              Cancel
             </Button>
-            <Button size="sm" onPress={createServer}>
-              <ButtonText>Create Server</ButtonText>
+            <Button
+              onPress={handleSubmit(createServer)}
+              className="w-24"
+              disabled={isLoading}
+            >
+              {isLoading ? "Creating..." : "Create"}
             </Button>
           </DialogFooter>
         </DialogContent>
