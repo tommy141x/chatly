@@ -3,7 +3,7 @@ import { View, ScrollView, Image } from "react-native";
 import { router } from "expo-router";
 import { useForm, Controller } from "react-hook-form";
 import { HousePlus, MessageCircleMore } from "lucide-react-native";
-import { toast } from "sonner-native";
+import { toast } from "@/components/toaster";
 
 // Store imports
 import { useUserStore } from "@/lib/user";
@@ -17,11 +17,15 @@ import {
   Dialog,
   DialogContent,
   DialogFooter,
+  DialogDescription,
+  DialogClose,
   DialogHeader,
+  DialogTitle,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { H4, P } from "@/components/ui/typography";
+import { Text } from "@/components/ui/text";
 
 interface ServerFormData {
   name: string;
@@ -56,6 +60,18 @@ export default function SideBar() {
   });
 
   const createServer = async (data: ServerFormData) => {
+    toast("My toast", {
+      description: "My description",
+      duration: 5000,
+      icon: <MessageCircleMore />,
+    });
+    setTimeout(() => {
+      toast.promise(new Promise((resolve) => setTimeout(resolve, 2000)), {
+        loading: "Downloading more RAM...",
+        success: "RAM downloaded!",
+        error: "Not enough RAM found...",
+      });
+    }, 2000);
     setIsLoading(true);
     try {
       /* Keeping your API method commented as requested
@@ -77,7 +93,6 @@ export default function SideBar() {
       */
       handleCloseDialog();
     } catch (error: any) {
-      toast.error(error.message || "Failed to create server");
       setFormError("root", {
         type: "manual",
         message: error.message || "Failed to create server",
@@ -116,9 +131,9 @@ export default function SideBar() {
   }, []);
 
   return (
-    <View className="w-[90px] bg-background-50 rounded-3xl h-full gap-4 flex items-center justify-start pt-4">
+    <View className="w-[90px] bg-background text-foreground rounded-3xl h-full gap-4 flex items-center justify-start pt-4">
       <Button variant="outline" className="w-14 h-14 rounded-full p-0">
-        <MessageCircleMore className="h-7 w-7 text-primary" />
+        <MessageCircleMore className="h-7 w-7 text-foreground" />
       </Button>
 
       {servers.map((server) => (
@@ -140,16 +155,16 @@ export default function SideBar() {
         onPress={() => setShowDialog(true)}
         className="w-14 h-14 rounded-full items-center justify-center p-0"
       >
-        <HousePlus className="h-7 w-7 text-primary" />
+        <HousePlus className="h-7 w-7 text-foreground" />
       </Button>
 
       <Dialog open={showDialog} onOpenChange={handleCloseDialog}>
-        <DialogContent>
+        <DialogContent className="w-[400px] min-w-[200px] bg-card">
           <DialogHeader>
-            <H4 className="font-semibold">Create a New Server</H4>
-            <P className="text-sm text-muted-foreground">
+            <DialogTitle>Create a New Server</DialogTitle>
+            <DialogDescription>
               Fill in the details for your new server
-            </P>
+            </DialogDescription>
           </DialogHeader>
 
           <div className="space-y-4 py-4">
@@ -205,27 +220,29 @@ export default function SideBar() {
                 )}
               />
               {errors.bio && (
-                <P className="text-sm text-destructive mt-1">
+                <Text className="text-sm text-destructive mt-1">
                   {errors.bio.message}
-                </P>
+                </Text>
               )}
             </div>
           </div>
 
           <DialogFooter>
-            <Button
-              variant="outline"
-              onPress={handleCloseDialog}
-              className="w-24"
-            >
-              Cancel
-            </Button>
+            <DialogClose asChild>
+              <Button
+                variant="outline"
+                onPress={handleCloseDialog}
+                className="w-24"
+              >
+                <P>Cancel</P>
+              </Button>
+            </DialogClose>
             <Button
               onPress={handleSubmit(createServer)}
               className="w-24"
               disabled={isLoading}
             >
-              {isLoading ? "Creating..." : "Create"}
+              <Text>{isLoading ? "Creating..." : "Create"}</Text>
             </Button>
           </DialogFooter>
         </DialogContent>

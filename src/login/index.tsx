@@ -1,5 +1,5 @@
 import * as React from "react";
-import { View } from "react-native";
+import { View, ActivityIndicator } from "react-native";
 import { router } from "expo-router";
 import { useForm, Controller } from "react-hook-form";
 import { Account } from "react-native-appwrite";
@@ -8,7 +8,6 @@ import { useUserStore } from "@/lib/user";
 import { useSessionStore } from "@/lib/session";
 import { useEndpointStore } from "@/lib/endpoint";
 import { useDebouncedCallback } from "use-debounce";
-import { toast } from "sonner-native";
 import { getDeviceInfo } from "@/lib/utils";
 
 // UI Components
@@ -18,6 +17,7 @@ import { Separator } from "@/components/ui/separator";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { H4, P } from "@/components/ui/typography";
+import { Text } from "@/components/ui/text";
 import { isMobile } from "@/lib/utils";
 
 interface LoginFormData {
@@ -57,14 +57,12 @@ function Login() {
 
       if (session) {
         setSession(session.$id);
-        toast.success("Logged in successfully!");
         router.replace("/");
       } else {
         throw new Error("Login failed");
       }
     } catch (error: any) {
       const errorMessage = error.message || "An error occurred during login";
-      toast.error(errorMessage);
       setFormError("root", {
         type: "manual",
         message: errorMessage,
@@ -164,7 +162,7 @@ function Login() {
             className="w-full rounded-xl"
             disabled={isLoading}
           >
-            {isLoading ? <P>Logging in...</P> : <P>Log In</P>}
+            {isLoading ? <ActivityIndicator /> : <Text>Log In</Text>}
           </Button>
         </div>
 

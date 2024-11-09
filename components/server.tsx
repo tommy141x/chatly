@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, ScrollView } from "react-native";
+import { View, ScrollView, ActivityIndicator } from "react-native";
 import { logout } from "@/lib/utils";
 import { useUserStore } from "@/lib/user";
 import { Button } from "@/components/ui/button";
@@ -52,7 +52,7 @@ export default function Server() {
             className="mt-4 mx-auto"
             disabled={isLoggingOut}
           >
-            {isLoggingOut ? <Text>spinner</Text> : <Text>Logout</Text>}
+            {isLoggingOut ? <ActivityIndicator /> : <Text>Logout</Text>}
           </Button>
         </View>
       </View>

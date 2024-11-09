@@ -44,7 +44,7 @@ function TitleBar() {
     <View
       ref={titleBarRef}
       className={`sticky top-0 h-9 w-full flex flex-row justify-between ${
-        isDesktop ? "bg-background-50 z-[99999]" : "bg-background-0"
+        isDesktop ? "bg-card !z-[999]" : "bg-transparent"
       }`}
     >
       <View className="flex items-center">
@@ -56,21 +56,21 @@ function TitleBar() {
         <View className="flex flex-row pointer-events-auto">
           <Pressable
             variant="primary"
-            className="bg-background items-center justify-center hover:bg-background-200 h-9 w-9 rounded-none"
+            className="bg-card text-foreground items-center justify-center hover:bg-accent h-9 w-9 rounded-none"
             onPress={handleMinimize}
           >
             <Minus className="p-0" />
           </Pressable>
           <Pressable
             variant="primary"
-            className="bg-background items-center justify-center hover:bg-background-200 h-9 w-9 rounded-none"
+            className="bg-card text-foreground items-center justify-center hover:bg-accent h-9 w-9 rounded-none"
             onPress={handleMaximize}
           >
             <Square className="p-0.5" />
           </Pressable>
           <Pressable
             variant="ghost"
-            className="bg-background items-center justify-center hover:bg-error-300 h-9 w-9 rounded-none"
+            className="bg-card text-foreground items-center justify-center hover:bg-red-700 h-9 w-9 rounded-none"
             onPress={handleClose}
           >
             <X className="p-0" />

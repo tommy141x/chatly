@@ -4,45 +4,63 @@ import { PortalHost } from "@rn-primitives/portal";
 import { StatusBar } from "expo-status-bar";
 import { TitleBar } from "@/components/titlebar";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { View } from "react-native";
+import { View, Text } from "react-native";
 import { useUserStore } from "@/lib/user";
 import { pingServer, validateUser, isWeb } from "@/lib/utils";
 import { endpointState, setInitialEndpointState } from "@/lib/endpoint";
 import * as SplashScreen from "expo-splash-screen";
 import Splash from "@/components/splash-web";
 import { Easing } from "react-native-reanimated";
-import { Toaster } from "sonner-native";
+import { Toaster } from "@/components/toaster";
 import { Stack } from "expo-router";
 import {
   useFonts,
-  Inter_100Thin,
-  Inter_200ExtraLight,
-  Inter_300Light,
-  Inter_400Regular,
-  Inter_500Medium,
-  Inter_600SemiBold,
-  Inter_700Bold,
-  Inter_800ExtraBold,
-  Inter_900Black,
-} from "@expo-google-fonts/inter";
+  Poppins_100Thin,
+  Poppins_100Thin_Italic,
+  Poppins_200ExtraLight,
+  Poppins_200ExtraLight_Italic,
+  Poppins_300Light,
+  Poppins_300Light_Italic,
+  Poppins_400Regular,
+  Poppins_400Regular_Italic,
+  Poppins_500Medium,
+  Poppins_500Medium_Italic,
+  Poppins_600SemiBold,
+  Poppins_600SemiBold_Italic,
+  Poppins_700Bold,
+  Poppins_700Bold_Italic,
+  Poppins_800ExtraBold,
+  Poppins_800ExtraBold_Italic,
+  Poppins_900Black,
+  Poppins_900Black_Italic,
+} from "@expo-google-fonts/poppins";
 import { useColorScheme } from "@/lib/utils";
 
 SplashScreen.preventAutoHideAsync();
-
+import { vars } from "nativewind";
 export default function Layout() {
   const { colorScheme, setColorScheme, isDarkColorScheme } = useColorScheme();
   const [appIsReady, setAppIsReady] = React.useState(false);
   const { user, setUser } = useUserStore.getState();
-  const [fontsLoaded] = useFonts({
-    Inter_100Thin,
-    Inter_200ExtraLight,
-    Inter_300Light,
-    Inter_400Regular,
-    Inter_500Medium,
-    Inter_600SemiBold,
-    Inter_700Bold,
-    Inter_800ExtraBold,
-    Inter_900Black,
+  let [fontsLoaded] = useFonts({
+    Poppins_100Thin,
+    Poppins_100Thin_Italic,
+    Poppins_200ExtraLight,
+    Poppins_200ExtraLight_Italic,
+    Poppins_300Light,
+    Poppins_300Light_Italic,
+    Poppins_400Regular,
+    Poppins_400Regular_Italic,
+    Poppins_500Medium,
+    Poppins_500Medium_Italic,
+    Poppins_600SemiBold,
+    Poppins_600SemiBold_Italic,
+    Poppins_700Bold,
+    Poppins_700Bold_Italic,
+    Poppins_800ExtraBold,
+    Poppins_800ExtraBold_Italic,
+    Poppins_900Black,
+    Poppins_900Black_Italic,
   });
 
   const forFade = ({ current }) => ({
@@ -52,7 +70,6 @@ export default function Layout() {
   });
 
   const loadColorScheme = async () => {
-    setColorScheme("dark");
     const theme = await AsyncStorage.getItem("theme");
     if (!theme) {
       AsyncStorage.setItem("theme", colorScheme);
@@ -136,7 +153,19 @@ export default function Layout() {
         }}
       />
       <PortalHost />
-      <Toaster />
+      <Toaster
+        theme={colorScheme}
+        toastOptions={{
+          classNames: {
+            toast: "bg-card",
+            title: "text-foreground font-bold ml-2",
+            description: "text-muted-foreground ml-2",
+            actionButton: "bg-secondary",
+            cancelButton: "bg-secondary",
+            closeButton: "bg-secondary",
+          },
+        }}
+      />
       <StatusBar style="auto" />
     </View>
   );

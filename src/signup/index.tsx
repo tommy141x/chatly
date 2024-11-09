@@ -1,5 +1,5 @@
 import * as React from "react";
-import { View } from "react-native";
+import { View, ActivityIndicator } from "react-native";
 import { router } from "expo-router";
 import { useForm, Controller } from "react-hook-form";
 import { Account, ID } from "react-native-appwrite";
@@ -8,7 +8,6 @@ import { userState } from "@/lib/user";
 import { useSessionStore } from "@/lib/session";
 import { useEndpointStore } from "@/lib/endpoint";
 import { useDebouncedCallback } from "use-debounce";
-import { toast } from "sonner-native";
 
 // UI Components
 import { Card } from "@/components/ui/card";
@@ -17,6 +16,7 @@ import { Separator } from "@/components/ui/separator";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { H4, P } from "@/components/ui/typography";
+import { Text } from "@/components/ui/text";
 import { isMobile } from "@/lib/utils";
 
 interface FormData {
@@ -56,10 +56,8 @@ function SignUp() {
       );
 
       setSession(result.$id);
-      toast.success("Account created successfully!");
       router.replace("/");
     } catch (e: any) {
-      toast.error(e.message);
       setFormError("root", {
         type: "manual",
         message: e.message,
@@ -182,7 +180,7 @@ function SignUp() {
             className="w-full rounded-xl"
             disabled={isLoading}
           >
-            {isLoading ? <P>Creating account...</P> : <P>Sign Up</P>}
+            {isLoading ? <ActivityIndicator /> : <Text>Sign Up</Text>}
           </Button>
         </div>
 
