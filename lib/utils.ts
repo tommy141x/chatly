@@ -12,7 +12,8 @@ import * as Device from "expo-device";
 import * as Network from "expo-network";
 import * as Cellular from "expo-cellular";
 // Determine if running within a Tauri app
-const isTauri = "__TAURI_INTERNALS__" in window;
+const isTauri =
+  typeof window !== "undefined" && "__TAURI_INTERNALS__" in window;
 
 // Determine if running in a web environment (browser)
 export const isWeb = Platform.OS === "web" && !isTauri;
