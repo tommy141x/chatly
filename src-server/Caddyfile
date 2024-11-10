@@ -5,8 +5,18 @@ http://{env._APP_PUBLIC_DOMAIN} {
 http://admin.{env._APP_PUBLIC_DOMAIN} {
   reverse_proxy appwrite:80
 
-  handle /v1/realtime/* {
-    reverse_proxy appwrite-realtime:80
+  route /v1/realtime* {
+    reverse_proxy appwrite-realtime:80 {
+      transport http {
+        versions h2c 1.1
+      }
+      # WebSocket headers to upgrade the connection
+      header_up Host {host}
+      header_up Upgrade {>Upgrade}
+      header_up Connection {>Connection}
+      header_up Sec-WebSocket-Key {>Sec-WebSocket-Key}
+      header_up Sec-WebSocket-Version {>Sec-WebSocket-Version}
+    }
   }
 
   handle /console/* {
