@@ -1,0 +1,6 @@
+export const init = async (client) => {
+  //Check if _APPWRITE_PROJECT_ID is set, if it is, check if its valid, then continue...
+  //Initalize collections, buckets, ect...
+  //This should work even if the collections and buckets are already created or only some of them are created
+  //So this way if there is an update with a new collection or bucket or setting, it will be created & or modified without losing data.
+};

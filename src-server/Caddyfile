@@ -1,0 +1,15 @@
+http://{env._APP_PUBLIC_DOMAIN} {
+  reverse_proxy chatly:80
+}
+
+http://admin.{env._APP_PUBLIC_DOMAIN} {
+  reverse_proxy appwrite:80
+
+  handle /v1/realtime/* {
+    reverse_proxy appwrite-realtime:80
+  }
+
+  handle /console/* {
+    reverse_proxy appwrite-console:80
+  }
+}

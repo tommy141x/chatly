@@ -19,8 +19,8 @@ port: 7880
 # when redis is set, LiveKit will automatically operate in a fully distributed fashion
 # clients could connect to any node and be routed to the same room
 redis:
-  address: redis:6379
-  # db: 0
+  address: appwrite-redis:6379
+  db: 15
   # username: myuser
   # password: mypassword
   # To use sentinel remove the address key above and add the following
