@@ -57,7 +57,7 @@ services:
       - livekit
       - gateway
   appwrite:
-    image: appwrite/appwrite:1.6.0
+    image: appwrite/appwrite:latest
     container_name: appwrite
     <<: *x-logging
     restart: unless-stopped
@@ -170,13 +170,13 @@ services:
   appwrite-console:
     <<: *x-logging
     container_name: appwrite-console
-    image: appwrite/console:5.0.12
+    image: appwrite/console:latest
     restart: unless-stopped
     networks:
       - appwrite
       - gateway
   appwrite-realtime:
-    image: appwrite/appwrite:1.6.0
+    image: appwrite/appwrite:latest
     entrypoint: realtime
     container_name: appwrite-realtime
     <<: *x-logging
@@ -206,7 +206,7 @@ services:
       - _APP_LOGGING_CONFIG
 
   appwrite-worker-audits:
-    image: appwrite/appwrite:1.6.0
+    image: appwrite/appwrite:latest
     entrypoint: worker-audits
     <<: *x-logging
     container_name: appwrite-worker-audits
@@ -232,7 +232,7 @@ services:
       - _APP_LOGGING_CONFIG
 
   appwrite-worker-webhooks:
-    image: appwrite/appwrite:1.6.0
+    image: appwrite/appwrite:latest
     entrypoint: worker-webhooks
     <<: *x-logging
     container_name: appwrite-worker-webhooks
@@ -260,7 +260,7 @@ services:
       - _APP_LOGGING_CONFIG
 
   appwrite-worker-deletes:
-    image: appwrite/appwrite:1.6.0
+    image: appwrite/appwrite:latest
     entrypoint: worker-deletes
     <<: *x-logging
     container_name: appwrite-worker-deletes
@@ -318,7 +318,7 @@ services:
       - _APP_MAINTENANCE_RETENTION_EXECUTION
 
   appwrite-worker-databases:
-    image: appwrite/appwrite:1.6.0
+    image: appwrite/appwrite:latest
     entrypoint: worker-databases
     <<: *x-logging
     container_name: appwrite-worker-databases
@@ -344,7 +344,7 @@ services:
       - _APP_LOGGING_CONFIG
 
   appwrite-worker-builds:
-    image: appwrite/appwrite:1.6.0
+    image: appwrite/appwrite:latest
     entrypoint: worker-builds
     <<: *x-logging
     container_name: appwrite-worker-builds
@@ -407,7 +407,7 @@ services:
       - _APP_STORAGE_WASABI_BUCKET
 
   appwrite-worker-certificates:
-    image: appwrite/appwrite:1.6.0
+    image: appwrite/appwrite:latest
     entrypoint: worker-certificates
     <<: *x-logging
     container_name: appwrite-worker-certificates
@@ -440,7 +440,7 @@ services:
       - _APP_LOGGING_CONFIG
 
   appwrite-worker-functions:
-    image: appwrite/appwrite:1.6.0
+    image: appwrite/appwrite:latest
     entrypoint: worker-functions
     <<: *x-logging
     container_name: appwrite-worker-functions
@@ -478,7 +478,7 @@ services:
       - _APP_LOGGING_CONFIG
 
   appwrite-worker-mails:
-    image: appwrite/appwrite:1.6.0
+    image: appwrite/appwrite:latest
     entrypoint: worker-mails
     <<: *x-logging
     container_name: appwrite-worker-mails
@@ -510,7 +510,7 @@ services:
       - _APP_LOGGING_CONFIG
 
   appwrite-worker-messaging:
-    image: appwrite/appwrite:1.6.0
+    image: appwrite/appwrite:latest
     entrypoint: worker-messaging
     <<: *x-logging
     container_name: appwrite-worker-messaging
@@ -560,7 +560,7 @@ services:
       - _APP_STORAGE_WASABI_BUCKET
 
   appwrite-worker-migrations:
-    image: appwrite/appwrite:1.6.0
+    image: appwrite/appwrite:latest
     entrypoint: worker-migrations
     <<: *x-logging
     container_name: appwrite-worker-migrations
@@ -590,7 +590,7 @@ services:
       - _APP_MIGRATIONS_FIREBASE_CLIENT_SECRET
 
   appwrite-task-maintenance:
-    image: appwrite/appwrite:1.6.0
+    image: appwrite/appwrite:latest
     entrypoint: maintenance
     <<: *x-logging
     container_name: appwrite-task-maintenance
@@ -624,7 +624,7 @@ services:
       - _APP_MAINTENANCE_RETENTION_SCHEDULES
 
   appwrite-worker-usage:
-    image: appwrite/appwrite:1.6.0
+    image: appwrite/appwrite:latest
     entrypoint: worker-usage
     container_name: appwrite-worker-usage
     <<: *x-logging
@@ -652,7 +652,7 @@ services:
       - _APP_USAGE_AGGREGATION_INTERVAL
 
   appwrite-worker-usage-dump:
-    image: appwrite/appwrite:1.6.0
+    image: appwrite/appwrite:latest
     entrypoint: worker-usage-dump
     <<: *x-logging
     container_name: appwrite-worker-usage-dump
@@ -679,7 +679,7 @@ services:
       - _APP_USAGE_AGGREGATION_INTERVAL
 
   appwrite-task-scheduler-functions:
-    image: appwrite/appwrite:1.6.0
+    image: appwrite/appwrite:latest
     entrypoint: schedule-functions
     container_name: appwrite-task-scheduler-functions
     <<: *x-logging
@@ -704,7 +704,7 @@ services:
       - _APP_DB_PASS
 
   appwrite-task-scheduler-executions:
-    image: appwrite/appwrite:1.6.0
+    image: appwrite/appwrite:latest
     entrypoint: schedule-executions
     container_name: appwrite-task-scheduler-executions
     <<: *x-logging
@@ -729,7 +729,7 @@ services:
       - _APP_DB_PASS
 
   appwrite-task-scheduler-messages:
-    image: appwrite/appwrite:1.6.0
+    image: appwrite/appwrite:latest
     entrypoint: schedule-messages
     container_name: appwrite-task-scheduler-messages
     <<: *x-logging
@@ -754,7 +754,7 @@ services:
       - _APP_DB_PASS
 
   appwrite-assistant:
-    image: appwrite/assistant:0.4.0
+    image: appwrite/assistant:latest
     container_name: appwrite-assistant
     <<: *x-logging
     restart: unless-stopped
@@ -769,7 +769,7 @@ services:
     <<: *x-logging
     restart: unless-stopped
     stop_signal: SIGINT
-    image: openruntimes/executor:0.6.11
+    image: openruntimes/executor:latest
     networks:
       - appwrite
       - runtimes
@@ -844,15 +844,6 @@ services:
       - livekit
     volumes:
       - appwrite-redis:/data:rw
-
-  # clamav:
-  #   image: appwrite/clamav:1.2.0
-  #   container_name: appwrite-clamav
-  #   restart: unless-stopped
-  #   networks:
-  #     - appwrite
-  #   volumes:
-  #     - appwrite-uploads:/storage/uploads
 
 networks:
   livekit:
