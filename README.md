@@ -15,6 +15,9 @@
   </a>
 </p>
 
+> [!IMPORTANT]
+> **This project is in extremely early phases of development.** I'm working on it in my free time.
+
 # Chatly
 
 Chatly is an open-source social platform similar to Discord or Guilded, built using Expo, React Native, Tauri, and Appwrite.
@@ -34,6 +37,6 @@ Chatly is an open-source social platform similar to Discord or Guilded, built us
 🔗 [Chatly Server Setup](https://docs.timmygstudios.com/)
 
 ## 🤝 Contributing
-We welcome contributions to Chatly! Please feel free to submit pull requests or open issues for bugs, feature requests, or improvements.
+We welcome contributions to Chatly! Please feel free to submit pull requests or open issues for bugs, feature requests, or improvements. (Though I would recommend waiting until the project becomes more mature)
 
 ![Alt](https://repobeats.axiom.co/api/embed/77c19902cce7bc70718961056fd109c87508d902.svg "Repobeats analytics image")
