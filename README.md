@@ -18,6 +18,8 @@
 > [!IMPORTANT]
 > **This project is in extremely early phases of development.** I'm working on it in my free time.
 
+> **I plan to rewrite the current state of the project in [Lynx](https://lynxjs.org/). Pending completion of my main project [TORE](https://tornadoemergency.net).**
+
 # Chatly
 
 Chatly is an open-source social platform similar to Discord or Guilded, built using Expo, React Native, Tauri, and Appwrite.
