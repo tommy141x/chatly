@@ -1,4 +1,4 @@
-![Chatly Banner](https://www.tommy-johnston.com/chatly.png)
+![Banner](banner.png)
 
 <p align="center">
   <a href="../../releases" target="_blank">
